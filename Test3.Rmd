@@ -1,0 +1,34 @@
+---
+title: "Exploring Beijing Air Quality"
+author: "Daniela"
+date: "5/26/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import Data
+
+The data came from ????
+
+```{r cars}
+airqualitybeijing.csv <- "/home/CAMPUS/mwl04747/github/China_air_pollution_COVID/beijing-air-quality.csv"
+#airqualitybeijing.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/beijing-air-quality.csv"
+
+AQbeijing <- read.csv(airqualitybeijing.csv)
+
+str(AQbeijing)
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(AQbeijing$pm10)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
