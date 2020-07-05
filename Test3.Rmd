@@ -23,7 +23,7 @@ str(AQbeijing)
 
 ```
 
-## Including Plots
+## Scatter Plot
 
 You can also embed plots, for example:
 
@@ -31,4 +31,72 @@ You can also embed plots, for example:
 plot(AQbeijing$pm10)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Dates aren't correct -- Index...
+
+## Next Steps
+
+- Fix Dates
+
+ - as.Date()
+ 
+```{r fixdates}
+# Fix the dates!
+AQbeijing$NewDate = as.Date(AQbeijing$date)
+str(AQbeijing)
+head(AQbeijing)
+```
+
+
+```{r}
+plot(pm25 ~ NewDate, data=AQbeijing)
+
+```
+
+
+ 
+- Select Data Before and After Lockdown
+- Different for each city? Yes 
+- 80 days
+
+  - subset()
+  
+  
+```{r subset}
+# Dates for Beijing: "2020-02-10" Start
+
+AQbeijingLockDown = as.Date("2020-02-10"); str(AQbeijingLockDown)
+
+AQbeijingBefore = subset(AQbeijing, 
+        subset=(NewDate > AQbeijingLockDown-80 &
+                NewDate < AQbeijingLockDown))
+AQbeijingAfter = subset(AQbeijing, 
+        subset=(NewDate >= AQbeijingLockDown &
+                NewDate < AQbeijingLockDown + 80))
+
+plot(pm25~NewDate, AQbeijingNew)
+
+```
+
+- t-test Before and After
+  - t.test()
+  
+  
+```{r ttest}
+t.test(AQbeijingAfter$pm25, AQbeijingBefore$pm25)
+
+
+```
+
+- BACI "Before and Ater Control-Impact"
+  - aov() 
+  
+  
+visualization:
+
+- time series -- with abreak B/A
+- box plot B/A
+
+
+
+
+
