@@ -1,0 +1,359 @@
+	Welch Two Sample t-test
+
+data:  AQbeijingBefore$pm25 and AQbeijingAfter$pm25
+t = 1.5378, df = 154.32, p-value = 0.1261
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -3.895136 31.271110
+sample estimates:
+mean of x mean of y 
+  115.013   101.325 
+
+
+	Welch Two Sample t-test
+
+data:  AQguangzhouBefore$pm25 and AQguangzhouAfter$pm25
+t = 5.5921, df = 150.83, p-value = 1.025e-07
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 18.94993 39.65722
+sample estimates:
+mean of x mean of y 
+ 107.4286   78.1250 
+
+
+	Welch Two Sample t-test
+
+data:  AQnanjingBefore$pm25 and AQnanjingAfter$pm25
+t = 6.6445, df = 142.4, p-value = 5.993e-10
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 23.09062 42.64834
+sample estimates:
+mean of x mean of y 
+ 133.5195  100.6500 
+
+
+	Welch Two Sample t-test
+
+data:  AQshanghaiBefore$pm25 and AQshanghaiAfter$pm25
+t = 2.0826, df = 154.96, p-value = 0.03893
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+  0.7417727 28.0832273
+sample estimates:
+mean of x mean of y 
+ 111.0000   96.5875 
+
+
+	Welch Two Sample t-test
+
+data:  AQtianjinBefore$pm25 and AQtianjinAfter$pm25
+t = 2.6959, df = 136.18, p-value = 0.007906
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+  6.491451 42.231601
+sample estimates:
+mean of x mean of y 
+ 137.9740  113.6125 
+
+
+	Welch Two Sample t-test
+
+data:  AQwuhanBefore$pm25 and AQwuhanAfter$pm25
+t = 4.8819, df = 154.03, p-value = 2.604e-06
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 14.24436 33.60823
+sample estimates:
+mean of x mean of y 
+ 147.7013  123.7750 
+
+
+	Welch Two Sample t-test
+
+data:  AQbaotouBefore$pm25 and AQbaotouAfter$pm25
+t = 9.863, df = 96.745, p-value = 2.718e-16
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+  90.9032 136.7065
+sample estimates:
+mean of x mean of y 
+ 224.1299  110.3250 
+
+
+	Welch Two Sample t-test
+
+data:  AQdalianBefore$pm25 and AQdalianAfter$pm25
+t = 1.7895, df = 150.34, p-value = 0.07554
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -1.333407 26.945745
+sample estimates:
+mean of x mean of y 
+ 111.8312   99.0250 
+
+
+	Welch Two Sample t-test
+
+data:  AQhangzhouBefore$pm25 and AQhangzhouAfter$pm25
+t = 4.3573, df = 135.22, p-value = 2.585e-05
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 12.66809 33.72444
+sample estimates:
+mean of x mean of y 
+ 126.2338  103.0375 
+
+
+	Welch Two Sample t-test
+
+data:  AQnanchangBefore$pm25 and AQnanchangAfter$pm25
+t = 6.6243, df = 154.64, p-value = 5.459e-10
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 20.64912 38.19795
+sample estimates:
+mean of x mean of y 
+ 142.9610  113.5375 
+
+
+	Welch Two Sample t-test
+
+data:  AQtangshanBefore$pm25 and AQtangshanAfter$pm25
+t = 3.8223, df = 154.68, p-value = 0.0001912
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 14.24679 44.72301
+sample estimates:
+mean of x mean of y 
+ 167.5974  138.1125 
+
+
+	Welch Two Sample t-test
+
+data:  AQxuzhouBefore$pm25 and AQxuzhouAfter$pm25
+t = 7.5693, df = 134.71, p-value = 5.311e-12
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 28.28458 48.29302
+sample estimates:
+mean of x mean of y 
+ 169.7013  131.4125 
+
+
+	Welch Two Sample t-test
+
+data:  AQbenxiBefore$pm25 and AQbenxiAfter$pm25
+t = 5.7145, df = 139.27, p-value = 6.415e-08
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 23.01295 47.36140
+sample estimates:
+mean of x mean of y 
+ 159.3247  124.1375 
+
+
+	Welch Two Sample t-test
+
+data:  AQchangzhouBefore$pm25 and AQchangzhouAfter$pm25
+t = 6.1287, df = 140.86, p-value = 8.398e-09
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 22.25109 43.44177
+sample estimates:
+mean of x mean of y 
+ 129.5714   96.7250 
+
+
+	Welch Two Sample t-test
+
+data:  AQdandongBefore$pm25 and AQdandongAfter$pm25
+t = 2.4781, df = 154.07, p-value = 0.01429
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+  2.886259 25.573481
+sample estimates:
+mean of x mean of y 
+ 123.1299  108.9000 
+
+
+	Welch Two Sample t-test
+
+data:  AQfuxinBefore$pm25 and AQfuxinAfter$pm25
+t = 3.6758, df = 129.38, p-value = 0.0003461
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 14.15613 47.15750
+sample estimates:
+mean of x mean of y 
+ 149.1818  118.5250 
+
+
+	Welch Two Sample t-test
+
+data:  AQhefeiBefore$pm25 and AQhefeiAfter$pm25
+t = 6.8547, df = 142.42, p-value = 1.999e-10
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 23.58263 42.69594
+sample estimates:
+mean of x mean of y 
+ 130.7143   97.5750 
+
+
+	Welch Two Sample t-test
+
+data:  AQwuxiBefore$pm25 and AQwuxiAfter$pm25
+t = 5.2175, df = 135.69, p-value = 6.631e-07
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 16.78664 37.27959
+sample estimates:
+mean of x mean of y 
+ 126.8831   99.8500 
+
+
+	Welch Two Sample t-test
+
+data:  AQcangzhouBefore$pm25 and AQcangzhouAfter$pm25
+t = 6.801, df = 131.65, p-value = 3.293e-10
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 36.20371 65.90246
+sample estimates:
+mean of x mean of y 
+ 163.4156  112.3625 
+
+
+	Welch Two Sample t-test
+
+data:  AQchifengBefore$pm25 and AQchifengAfter$pm25
+t = 2.8278, df = 150.98, p-value = 0.005323
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+  5.17771 29.19177
+sample estimates:
+mean of x mean of y 
+ 89.25974  72.07500 
+
+
+	Welch Two Sample t-test
+
+data:  AQhuludaoBefore$pm25 and AQhuludaoAfter$pm25
+t = 4.978, df = 116.99, p-value = 2.235e-06
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 29.87246 69.34507
+sample estimates:
+mean of x mean of y 
+ 168.2338  118.6250 
+
+
+	Welch Two Sample t-test
+
+data:  AQpanjinBefore$pm25 and AQpanjinAfter$pm25
+t = 3.3104, df = 130.09, p-value = 0.001206
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 11.67725 46.36495
+sample estimates:
+mean of x mean of y 
+ 138.8961  109.8750 
+
+
+	Welch Two Sample t-test
+
+data:  AQyangzhouBefore$pm25 and AQyangzhouAfter$pm25
+t = 3.3025, df = 132.61, p-value = 0.001232
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+  9.268635 36.952793
+sample estimates:
+mean of x mean of y 
+ 119.2857   96.1750 
+
+
+	Welch Two Sample t-test
+
+data:  AQyibinBefore$pm25 and AQyibinAfter$pm25
+t = 4.2522, df = 154.22, p-value = 3.656e-05
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 12.47063 34.11184
+sample estimates:
+mean of x mean of y 
+ 147.7662  124.4750 
+
+
+	Welch Two Sample t-test
+
+data:  AQchuzhouBefore$pm25 and AQchuzhouAfter$pm25
+t = 6.3001, df = 136.08, p-value = 3.839e-09
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 18.56907 35.55950
+sample estimates:
+mean of x mean of y 
+ 142.7143  115.6500 
+
+
+	Welch Two Sample t-test
+
+data:  AQfangchenggangBefore$pm25 and AQfangchenggangAfter$pm25
+t = 5.2766, df = 150.59, p-value = 4.508e-07
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 15.22835 33.45996
+sample estimates:
+mean of x mean of y 
+ 97.84416  73.50000 
+
+
+	Welch Two Sample t-test
+
+data:  AQganzhouBefore$pm25 and AQganzhouAfter$pm25
+t = 4.7489, df = 138.77, p-value = 5.038e-06
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 12.87832 31.25188
+sample estimates:
+mean of x mean of y 
+ 106.4026   84.3375 
+
+
+	Welch Two Sample t-test
+
+data:  AQjinzhouBefore$pm25 and AQjinzhouAfter$pm25
+t = 4.5046, df = 116.89, p-value = 1.585e-05
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 24.76893 63.63626
+sample estimates:
+mean of x mean of y 
+ 170.4026  126.2000 
+
+
+	Welch Two Sample t-test
+
+data:  AQsuzhouBefore$pm25 and AQsuzhouAfter$pm25
+t = 3.5392, df = 142.85, p-value = 0.000542
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+  8.632312 30.473857
+sample estimates:
+mean of x mean of y 
+ 131.4156  111.8625 
+
+
+	Welch Two Sample t-test
+
+data:  AQxianningBefore$pm25 and AQxianningAfter$pm25
+t = 5.7577, df = 153.72, p-value = 4.494e-08
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 16.71078 34.16747
+sample estimates:
+mean of x mean of y 
+ 123.3766   97.9375 
+
