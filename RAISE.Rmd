@@ -1,0 +1,334 @@
+---
+title: "Exploring Air Quality"
+author: "Daniela"
+date: "5/26/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import Data
+
+The data came from the Air Quality Historical Data Platform, an open data framework which gathers data from worldwide EPA monitering programs.
+
+```{r cars}
+#airqualitybeijing.csv <- #"/home/CAMPUS/mwl04747/github/China_air_pollution_COVID/beijing-air-quality.csv"
+airqualitybeijing.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/beijing-air-quality.csv"
+
+AQbeijing <- read.csv(airqualitybeijing.csv)
+
+str(AQbeijing)
+
+```
+
+## Scatter Plot
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(AQbeijing$pm10)
+```
+
+Dates aren't correct -- Index...
+
+## Next Steps
+
+- Fix Dates
+
+ - as.Date()
+ 
+```{r fixdates}
+# Fix the dates!
+AQbeijing$NewDate = as.Date(AQbeijing$date)
+str(AQbeijing)
+head(AQbeijing)
+```
+
+
+```{r}
+plot(pm25 ~ NewDate, data=AQbeijing)
+
+```
+
+
+ 
+- Select Data Before and After Lockdown
+- Different for each city? Yes 
+- 80 days
+
+  - subset()
+  
+  
+```{r subset}
+# Dates for Beijing: "2020-02-10" Start
+
+AQbeijingLockDown = as.Date("2020-02-10"); str(AQbeijingLockDown)
+
+AQbeijingBefore = subset(AQbeijing, 
+        subset=(NewDate > AQbeijingLockDown-80 &
+                NewDate < AQbeijingLockDown))
+AQbeijingAfter = subset(AQbeijing, 
+        subset=(NewDate >= AQbeijingLockDown &
+                NewDate < AQbeijingLockDown + 80))
+
+plot(pm25~NewDate, AQbeijingBefore)
+plot(pm25~NewDate, AQbeijingAfter)
+
+```
+
+- t-test Before and After
+  - t.test()
+  
+  
+```{r ttest}
+#run ttest
+t.test(AQbeijingBefore$pm25, AQbeijingAfter$pm25)
+
+
+```
+
+```{r ttest}
+#extract mean_before, mean_after, p-value
+ttest = t.test(AQbeijingBefore$pm25, AQbeijingAfter$pm25)
+ttest$estimate
+ttest$p.value
+
+
+#export whole ttest
+capture.output(ttest, file = "Welch_output.csv", append = TRUE)
+
+#export just city, estimate, pvalue
+estimate = ttest$estimate
+pvalue = ttest$p.value
+city = "Beijing"
+capture.output(city, estimate, pvalue, file = "output.csv", append = TRUE)
+
+
+
+#dump(city, estimate, pvalue, file = "output.csv", append=TRUE)
+
+#save(city, estimate, pvalue, "output.csv")
+
+#write.csv("Beijing", file="output.csv", row.names=FALSE, append=TRUE)
+
+
+#write.csv(estimate, pvalue, file = "output.csv")
+
+#save(estimate, pvalue, list = character(),
+     #file = ("output.csv")
+
+#save(estimate, pvalue, file = "output.RData")
+#head("output.RData")
+```
+
+#repeating import data, scatterplot, fix dates, welch 2-sample t test, output for other cities.
+
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import Data
+
+The data came from the Air Quality Historical Data Platform, an open data framework which gathers data from worldwide EPA monitering programs.
+
+```{r cars}
+#airqualitybeijing.csv <- #"/home/CAMPUS/mwl04747/github/China_air_pollution_COVID/beijing-air-quality.csv"
+
+
+xianning.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/e/xianning-air-quality.csv"
+
+AQ <- read.csv(xianning.csv)
+
+str(AQ)
+
+```
+
+## Scatter Plot
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(AQ$pm25)
+```
+
+Dates aren't correct -- Index...
+
+## Next Steps
+
+- Fix Dates
+
+ - as.Date()
+ 
+```{r fixdates}
+# Fix the dates
+AQ$NewDate = as.Date(AQ$date)
+str(AQ)
+head(AQ)
+```
+
+
+```{r}
+plot(pm25 ~ NewDate, data=AQ)
+
+```
+
+
+ 
+- Select Data Before and After Lockdown
+- Different for each city? Yes 
+- 80 days
+
+  - subset()
+  
+  
+```{r subset}
+# Dates for city: "yyyy-mm-dd" Start Lockdown
+
+AQLockDown = as.Date("2020-01-24"); str(AQLockDown)
+
+AQxianningBefore = subset(AQ, 
+        subset=(NewDate > AQLockDown-80 &
+                NewDate < AQLockDown))
+AQxianningAfter = subset(AQ, 
+        subset=(NewDate >= AQLockDown &
+                NewDate < AQLockDown + 80))
+
+plot(pm25~NewDate, AQxianningBefore) 
+plot(pm25~NewDate, AQxianningAfter)
+
+```
+
+- t-test Before and After
+  - t.test()
+  
+  
+```{r ttest}
+#run ttest
+t.test(AQxianningBefore$pm25, AQxianningAfter$pm25)
+
+
+```
+
+```{r ttest}
+#extract mean_before, mean_after, p-value
+ttest = t.test(AQxianningBefore$pm25, AQxianningAfter$pm25)
+ttest$estimate
+ttest$p.value
+
+
+#export whole ttest
+capture.output(ttest, file = "Welch_output.csv", append = TRUE)
+
+#export just city, estimate, pvalue
+estimate = ttest$estimate
+pvalue = ttest$p.value
+city = "Xianning"
+capture.output(city, estimate, pvalue, file = "output.csv", append = TRUE)
+
+
+
+#dump(city, estimate, pvalue, file = "output.csv", append=TRUE)
+
+#save(city, estimate, pvalue, "output.csv")
+
+#write.csv("Beijing", file="output.csv", row.names=FALSE, append=TRUE)
+
+
+#write.csv(estimate, pvalue, file = "output.csv")
+
+#save(estimate, pvalue, list = character(),
+     #file = ("output.csv")
+
+#save(estimate, pvalue, file = "output.RData")
+#head("output.RData")
+```
+
+
+
+
+
+
+
+
+- BACI "Before and Ater Control-Impact"
+  - aov() 
+  
+  
+visualization:
+
+- time series -- with abreak B/A
+- box plot B/A
+
+
+
+```{r}
+# cityname, date, pm25: two files: one before, one after lockdown starts
+#excluding two problematic files: tianjin and xianning
+
+city_size_lockdowndate.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/city_size_lockdowndate.csv"
+
+lockdowndate <- read.csv(city_size_lockdowndate.csv)
+
+library(dplyr)
+library(readr)
+files <- list.files(path = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data", pattern = "*.csv", full.names = T)
+
+tbl.csv <- sapply(files, read_csv, simplify=FALSE) %>% 
+bind_rows(.id = "id")
+
+#write tbl as csv
+write.csv(tbl, "tbl.csv")
+head(tbl.csv)
+
+#trying to include xianning and tianjin, which have no O3 values.
+files2 <- list.files(path = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/tianjinandxianning/", pattern = "*.csv", full.names = T)
+tblnew <- sapply(files2, read_csv, simplify=FALSE) %>% 
+bind_rows(.id = "id")
+write.csv(tbl2, "tblnew.csv")
+head(tblnew.csv)
+
+#rename cities in tbl from id
+#renamed using command line: sed 's/"\/home\/CAMPUS\/dapa2019\/R\/China_air_pollution_COVID\/data\/baotou-air-quality\.csv"/baotou/g' tbl.csv>tbl2.csv
+#renamed cities are in tbl_28cities.csv and tbl_2cities.csv. The 2cities file includes only tianjin and xianning.
+
+#merge csv files: 28cities and 2cities
+
+##files_all <- list.files(path = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/", pattern = "*cities.csv", full.names = T)
+
+#tbl_all <- sapply(files_all, read_csv, simplify=FALSE) %>% 
+#bind_rows(.id = "id")
+#write.csv(tbl_all, "tbl_all")
+#head(tbl_all.csv)
+
+
+#all_data <- rbind.fill(files_all)
+
+
+tbl_big <-read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/tbl_28cities.csv",head=T)
+tbl_small <-read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/tbl_2cities.csv",head=T)
+tbl_all = merge(tbl_big,tbl_small)
+head(tbl_all) #gives 0 rows
+
+
+#merge lockdown dates with imported data
+
+
+#window to cut dates out
+
+#create two big files
+
+
+# ttest for before vs after
+
+
+
+
+```
+
+
