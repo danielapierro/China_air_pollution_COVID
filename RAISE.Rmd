@@ -288,10 +288,11 @@ head(tbl.csv)
 
 #trying to include xianning and tianjin, which have no O3 values.
 files2 <- list.files(path = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/tianjinandxianning/", pattern = "*.csv", full.names = T)
-tblnew <- sapply(files2, read_csv, simplify=FALSE) %>% 
+tbl_test <- sapply(files2, read_csv, simplify=FALSE) %>% 
+  # use colClasses=c("o3"="numeric") with function read.csv
 bind_rows(.id = "id")
-write.csv(tbl2, "tblnew.csv")
-head(tblnew.csv)
+write.csv(tbl_test, "tblnew.csv")
+head(tbl_test.csv)
 
 #rename cities in tbl from id
 #renamed using command line: sed 's/"\/home\/CAMPUS\/dapa2019\/R\/China_air_pollution_COVID\/data\/baotou-air-quality\.csv"/baotou/g' tbl.csv>tbl2.csv
