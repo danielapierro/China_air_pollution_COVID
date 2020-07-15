@@ -272,9 +272,9 @@ write.csv(tbl, "tbl.csv")
 head(tbl.csv)
 
 #trying to include xianning and tianjin, which have no O3 values.
-#opened tbl_2cities in excel, found that o3 included TRUE (likely an unspecified trace amount) and NA, changed TRUE and NA to -9999 and renamed to tbl_2cities_edited
+#opened tbl_2cities in BBEdit, found that o3 included TRUE (likely an unspecified trace amount) and NA, changed TRUE to NA and renamed to tbl_2cities_editedbetter.csv
 #merge 28 and 2:
-cities2 <- read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/tbl_2cities_edited.csv")
+cities2 <- read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/tbl_2cities_editedbetter.csv")
 cities28  <- read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/tbl_28cities.csv")
 
 str(cities2)
@@ -282,10 +282,9 @@ str(cities2)
 cities30 <- rbind(cities2, cities28)
 head(cities30)
 
-cities30$o3[cities30$o3==-9999]=NA
-write.csv(cities30, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/cities30.csv")
-
 str(cities30)
+
+plot(pm25 ~ date, data=cities30)
 
 #merge lockdown dates with imported data
 
@@ -310,6 +309,16 @@ cities30$newdate = as.Date(cities30$date)
 str(cities30)
 head(cities30)
 
+
+#library(lubridate)
+#using excel, I replaced all "/" with "_" and got rid of the X column.
+#reformatted <- read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/cities30reformatteddate.csv")
+#str(reformatted)
+#reformatted$guessdate = as.Date(reformatted$date, guess_formats(reformatted$date, "%m_%d_%y"))
+#gives the following error: Error in `$<-.data.frame`(`*tmp*`, guessdate, value = c(17113, 17114, : replacement has 139710 rows, data has 69855
+
+#parse_date(cities30$AddedDate, "%y_%m_%d") #not working
+
 ```
 ```{r}
 plot(pm25 ~ newdate, data=cities30)
@@ -332,6 +341,15 @@ FIX THE DATES (see error at 2015)
 
   - subset()
   
+ # subset(df, var1 < city_size_lockdowndate.csv$value )
   
+  #alternative approach: use conditional formatting to create +1 and -1 column
+  # if (test_expression) {
+statement
+}
+  x <- 5
+if(x > 0){
+print("Positive number")
+}
 
 
