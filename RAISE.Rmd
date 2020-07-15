@@ -54,9 +54,11 @@ plot(pm25 ~ NewDate, data=AQbeijing)
 
 
  
-- Select Data Before and After Lockdown
+- Select Data Before and After Lockdown. file is city_size_lockdowndate.csv
 - Different for each city? Yes 
 - 80 days
+
+#merge files, or extract by city, date. before/after by date. subset(). how can I extract a window of dates by factor. create different data frames by each window. new column where: if date before lockdown, -1, if date after lockdown +1, get rid of zeros. create binary columns.
 
   - subset()
   
@@ -77,6 +79,7 @@ plot(pm25~NewDate, AQbeijingBefore)
 plot(pm25~NewDate, AQbeijingAfter)
 
 ```
+
 
 - t-test Before and After
   - t.test()
@@ -231,29 +234,7 @@ pvalue = ttest$p.value
 city = "Xianning"
 capture.output(city, estimate, pvalue, file = "output.csv", append = TRUE)
 
-
-
-#dump(city, estimate, pvalue, file = "output.csv", append=TRUE)
-
-#save(city, estimate, pvalue, "output.csv")
-
-#write.csv("Beijing", file="output.csv", row.names=FALSE, append=TRUE)
-
-
-#write.csv(estimate, pvalue, file = "output.csv")
-
-#save(estimate, pvalue, list = character(),
-     #file = ("output.csv")
-
-#save(estimate, pvalue, file = "output.RData")
-#head("output.RData")
 ```
-
-
-
-
-
-
 
 
 - BACI "Before and Ater Control-Impact"
@@ -269,7 +250,11 @@ visualization:
 
 ```{r}
 # cityname, date, pm25: two files: one before, one after lockdown starts
-#excluding two problematic files: tianjin and xianning
+
+#renamed cities in the file tbl from id, using sed at the command line 
+#sed 's/"\/home\/CAMPUS\/dapa2019\/R\/China_air_pollution_COVID\/data\/baotou-air-quality\.csv"/baotou/g' tbl.csv>tbl2.csv
+#renamed cities are in tbl_28cities.csv and tbl_2cities.csv. 
+#tbl_28cities.csv includes 28 cities, excludes two problematic files (tianjin and xianning) which are in tbl_2cities.csv
 
 city_size_lockdowndate.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/city_size_lockdowndate.csv"
 
@@ -287,35 +272,20 @@ write.csv(tbl, "tbl.csv")
 head(tbl.csv)
 
 #trying to include xianning and tianjin, which have no O3 values.
-files2 <- list.files(path = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/tianjinandxianning/", pattern = "*.csv", full.names = T)
-tbl_test <- sapply(files2, read_csv, simplify=FALSE) %>% 
-  # use colClasses=c("o3"="numeric") with function read.csv
-bind_rows(.id = "id")
-write.csv(tbl_test, "tblnew.csv")
-head(tbl_test.csv)
+#opened tbl_2cities in excel, found that o3 included TRUE (likely an unspecified trace amount) and NA, changed TRUE and NA to -9999 and renamed to tbl_2cities_edited
+#merge 28 and 2:
+cities2 <- read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/tbl_2cities_edited.csv")
+cities28  <- read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/tbl_28cities.csv")
 
-#rename cities in tbl from id
-#renamed using command line: sed 's/"\/home\/CAMPUS\/dapa2019\/R\/China_air_pollution_COVID\/data\/baotou-air-quality\.csv"/baotou/g' tbl.csv>tbl2.csv
-#renamed cities are in tbl_28cities.csv and tbl_2cities.csv. The 2cities file includes only tianjin and xianning.
+str(cities2)
 
-#merge csv files: 28cities and 2cities
+cities30 <- rbind(cities2, cities28)
+head(cities30)
 
-##files_all <- list.files(path = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/", pattern = "*cities.csv", full.names = T)
+cities30$o3[cities30$o3==-9999]=NA
+write.csv(cities30, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/cities30.csv")
 
-#tbl_all <- sapply(files_all, read_csv, simplify=FALSE) %>% 
-#bind_rows(.id = "id")
-#write.csv(tbl_all, "tbl_all")
-#head(tbl_all.csv)
-
-
-#all_data <- rbind.fill(files_all)
-
-
-tbl_big <-read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/tbl_28cities.csv",head=T)
-tbl_small <-read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/tbl_2cities.csv",head=T)
-tbl_all = merge(tbl_big,tbl_small)
-head(tbl_all) #gives 0 rows
-
+str(cities30)
 
 #merge lockdown dates with imported data
 
@@ -324,12 +294,44 @@ head(tbl_all) #gives 0 rows
 
 #create two big files
 
-
 # ttest for before vs after
 
 
 
 
 ```
+
+## Next Steps
+
+ 
+```{r fixdates}
+# Fix the dates! Change from <factor> (date column) to <date> (newdate column).
+cities30$newdate = as.Date(cities30$date)
+str(cities30)
+head(cities30)
+
+```
+```{r}
+plot(pm25 ~ newdate, data=cities30)
+#what is this error?
+```
+
+```{r}
+plot(pm25 ~ date, data=cities30)
+#see error at 2015
+```
+
+ 
+next steps: 
+FIX THE DATES (see error at 2015)
+- Select Data Before and After Lockdown. file is city_size_lockdowndate.csv
+- Different for each city? Yes 
+- 80 days
+
+#merge files, or extract by city, date. before/after by date. subset(). how can I extract a window of dates by factor. create different data frames by each window. new column where: if date before lockdown, -1, if date after lockdown +1, get rid of zeros. create binary columns.
+
+  - subset()
+  
+  
 
 
