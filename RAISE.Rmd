@@ -292,6 +292,16 @@ cities30$newdate = as.Date(cities30$date) #newdate format is yyyy-mm-dd
 str(cities30)
 head(cities30)
 
+
+#library(lubridate)
+#using excel, I replaced all "/" with "_" and got rid of the X column.
+#reformatted <- read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/cities30reformatteddate.csv")
+#str(reformatted)
+#reformatted$guessdate = as.Date(reformatted$date, guess_formats(reformatted$date, "%m_%d_%y"))
+#gives the following error: Error in `$<-.data.frame`(`*tmp*`, guessdate, value = c(17113, 17114, : replacement has 139710 rows, data has 69855
+
+#parse_date(cities30$AddedDate, "%y_%m_%d") #not working
+
 ```
 ```{r}
 plot(pm25 ~ date, data=cities30)
