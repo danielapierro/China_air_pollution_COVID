@@ -256,10 +256,6 @@ visualization:
 #renamed cities are in tbl_28cities.csv and tbl_2cities.csv. 
 #tbl_28cities.csv includes 28 cities, excludes two problematic files (tianjin and xianning) which are in tbl_2cities.csv
 
-city_size_lockdowndate.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/city_size_lockdowndate.csv"
-
-lockdowndate <- read.csv(city_size_lockdowndate.csv)
-
 library(dplyr)
 library(readr)
 files <- list.files(path = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data", pattern = "*.csv", full.names = T)
@@ -280,23 +276,10 @@ cities28  <- read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/tbl
 str(cities2)
 
 cities30 <- rbind(cities2, cities28)
+write.csv(cities30, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/cities30.csv")
 head(cities30)
 
-str(cities30)
-
-plot(pm25 ~ date, data=cities30)
-
-#merge lockdown dates with imported data
-
-
-#window to cut dates out
-
-#create two big files
-
-# ttest for before vs after
-
-
-
+str(cities30) #date column is formatted as yyyy/mm/dd
 
 ```
 
@@ -305,34 +288,30 @@ plot(pm25 ~ date, data=cities30)
  
 ```{r fixdates}
 # Fix the dates! Change from <factor> (date column) to <date> (newdate column).
-cities30$newdate = as.Date(cities30$date)
+cities30$newdate = as.Date(cities30$date) #newdate format is yyyy-mm-dd
 str(cities30)
 head(cities30)
 
-
-#library(lubridate)
-#using excel, I replaced all "/" with "_" and got rid of the X column.
-#reformatted <- read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/cities30reformatteddate.csv")
-#str(reformatted)
-#reformatted$guessdate = as.Date(reformatted$date, guess_formats(reformatted$date, "%m_%d_%y"))
-#gives the following error: Error in `$<-.data.frame`(`*tmp*`, guessdate, value = c(17113, 17114, : replacement has 139710 rows, data has 69855
-
-#parse_date(cities30$AddedDate, "%y_%m_%d") #not working
-
 ```
-```{r}
-plot(pm25 ~ newdate, data=cities30)
-#what is this error?
-```
-
 ```{r}
 plot(pm25 ~ date, data=cities30)
-#see error at 2015
+plot(pm25 ~ newdate, data=cities30) #more effective visualization
+```
+
+```{r}
+
+city_size_lockdowndate.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/city_size_lockdowndate.csv"
+lockdowndate <- read.csv(city_size_lockdowndate.csv)
+
+str(lockdowndate)
+
+
+
 ```
 
  
 next steps: 
-FIX THE DATES (see error at 2015)
+
 - Select Data Before and After Lockdown. file is city_size_lockdowndate.csv
 - Different for each city? Yes 
 - 80 days
