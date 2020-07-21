@@ -109,28 +109,9 @@ city = "Beijing"
 capture.output(city, estimate, pvalue, file = "output.csv", append = TRUE)
 
 
-
-#dump(city, estimate, pvalue, file = "output.csv", append=TRUE)
-
-#save(city, estimate, pvalue, "output.csv")
-
-#write.csv("Beijing", file="output.csv", row.names=FALSE, append=TRUE)
-
-
-#write.csv(estimate, pvalue, file = "output.csv")
-
-#save(estimate, pvalue, list = character(),
-     #file = ("output.csv")
-
-#save(estimate, pvalue, file = "output.RData")
-#head("output.RData")
 ```
 
-#repeating import data, scatterplot, fix dates, welch 2-sample t test, output for other cities.
-
-
-
-
+#repeating import data, scatterplot, fix dates, welch 2-sample t test, output for the other cities.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -293,27 +274,67 @@ str(cities30)
 head(cities30)
 
 
-#library(lubridate)
-#using excel, I replaced all "/" with "_" and got rid of the X column.
-#reformatted <- read.csv("/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/cities30reformatteddate.csv")
-#str(reformatted)
-#reformatted$guessdate = as.Date(reformatted$date, guess_formats(reformatted$date, "%m_%d_%y"))
-#gives the following error: Error in `$<-.data.frame`(`*tmp*`, guessdate, value = c(17113, 17114, : replacement has 139710 rows, data has 69855
-
-#parse_date(cities30$AddedDate, "%y_%m_%d") #not working
-
-```
 ```{r}
-plot(pm25 ~ date, data=cities30)
-plot(pm25 ~ newdate, data=cities30) #more effective visualization
+plot(pm25 ~ newdate, data=cities30) #points instead of circles, rotate y-axis, change labels from newdate etc. to be more readable, points--> grey. instert a moving average regression line. 
+#look into AIC
+str(cities30)
 ```
 
-```{r}
 
+
+
+The goal of the next section is to split the cities30.csv into four new csv files:
+the 80 days leading up to the date of lockdown in 2020
+the 80 days after and including the date of lockdown in 2020
+the same two ranges of dates but for 2019
+
+
+
+```{r}
+#this file includes city name and the date of lockdown formatted yyyy-mm-dd
 city_size_lockdowndate.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/city_size_lockdowndate.csv"
 lockdowndate <- read.csv(city_size_lockdowndate.csv)
 
 str(lockdowndate)
+
+
+#before newdate > "2020-02-10"-80 & newdate < "2020-02-10")}
+
+#after newdate >= "2020-02-10" & newdate < "2020-02-10"+80)}
+
+#working with a duplicate file (same as cities30) for experimenting
+
+
+cities30_duplicate = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/tbl/cities30_duplicate.csv"
+duplicate <- read.csv(cities30_duplicate)
+
+newdate <- duplicate$newdate
+
+#CITY2020BEFORE GUIDELINE
+
+beijing_beforelockdown2020 <- subset(cities30, subset=c(id=="beijing" & newdate > as.Date("2020-02-10")-80 & newdate < "2020-02-10"))
+str(beijing_beforelockdown2020)
+#write.csv(beijing_beforelockdown2020, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/beforelockdown2020/beijing_beforelockdown2020.csv")
+
+#results can be accessed as .csv files or as data frames.
+
+all_beforelockdown2020 <- do.call("rbind", list(beijing_beforelockdown2020, wuhan_beforelockdown2020, xianning_beforelockdown2020, tangshan_beforelockdown2020, wuxi_beforelockdown2020, nanjing_beforelockdown2020, hangzhou_beforelockdown2020, xuzhou_beforelockdown2020, changzhou_beforelockdown2020, dalian_beforelockdown2020, nanchang_beforelockdown2020, benxi_beforelockdown2020, dandong_beforelockdown2020, fuxin_beforelockdown2020, hefei_beforelockdown2020, huludao_beforelockdown2020, panjin_beforelockdown2020, yangzhou_beforelockdown2020, jinzhou_beforelockdown2020, tianjin_beforelockdown2020, yibin_beforelockdown2020, ganzhou_beforelockdown2020, guangzhou_beforelockdown2020, chuzhou_beforelockdown2020, suzhou_beforelockdown2020, fangchenggang_beforelockdown2020, cangzhou_beforelockdown2020, shanghai_beforelockdown2020, baotou_beforelockdown2020, chifeng_beforelockdown2020))
+
+write.csv(all_beforelockdown2020, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/all_beforelockdown2020.csv")
+
+
+#city2020after guideline
+beijingsubsetafter <- subset(duplicate, subset=c(id=="beijing" & newdate >= "2020-02-10" & newdate < as.Date("2020-02-10")+80))
+
+print(beijingsubsetafter)
+                             
+#measure of coal plants vs. hydroelectric.
+#coastal vs inland
+#general geography (eg. elevation)
+
+#duplicate_sorting = subset(duplicate, subset=c(id == "beijing"))
+#duplicate_sorting2 = subset(duplicate_sorting, subset=c(newdate < "2020-02-10"))
+#duplicate_sorting3 = subset(duplicate_sorting2, subset=c(newdate > as.Date("2020-02-10")-80))
 
 
 
