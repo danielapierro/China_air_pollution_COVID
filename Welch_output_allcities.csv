@@ -1,0 +1,48 @@
+
+	Welch Two Sample t-test
+
+data:  all_beforelockdown2020$pm25 and all_afterlockdown2020$pm25
+t = 21.924, df = 4105, p-value < 2.2e-16
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 27.76034 33.21277
+sample estimates:
+mean of x mean of y 
+ 137.0970  106.6104 
+
+
+	Welch Two Sample t-test
+
+data:  all_beforelockdown2019$pm25 and all_afterlockdown2019$pm25
+t = 10.079, df = 4595.6, p-value < 2.2e-16
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 11.08069 16.43237
+sample estimates:
+mean of x mean of y 
+ 137.8767  124.1202 
+
+
+	Welch Two Sample t-test
+
+data:  all_beforelockdown2019$pm25 and all_beforelockdown2020$pm25
+t = 0.50566, df = 4565.1, p-value = 0.6131
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -2.243419  3.802940
+sample estimates:
+mean of x mean of y 
+ 137.8767  137.0970 
+
+
+	Welch Two Sample t-test
+
+data:  all_afterlockdown2019$pm25 and all_afterlockdown2020$pm25
+t = 14.701, df = 4709.4, p-value < 2.2e-16
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 15.17478 19.84478
+sample estimates:
+mean of x mean of y 
+ 124.1202  106.6104 
+

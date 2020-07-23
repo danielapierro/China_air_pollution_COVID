@@ -319,7 +319,7 @@ all_beforelockdown2020 <- do.call("rbind", list(beijing_beforelockdown2020, wuha
 
 write.csv(all_beforelockdown2020, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/all_beforelockdown2020.csv")
 
-#city2020after guideline
+#CITY2020AFTER GUIDELINE
 beijing_afterlockdown2020 <- subset(cities30, subset=c(id=="beijing" & newdate >= "2020-02-10" & newdate < as.Date("2020-02-10")+80))
 head(beijing_afterlockdown2020)
 write.csv(beijing_afterlockdown2020, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/afterlockdown2020/beijing_afterlockdown2020.csv")
@@ -329,9 +329,6 @@ all_afterlockdown2020 <- do.call("rbind", list(beijing_afterlockdown2020, wuhan_
 write.csv(all_afterlockdown2020, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/all_afterlockdown2020.csv")
 
 head(all_afterlockdown2020)
-
-
-
 
 ```
 repeating the above for 2019
@@ -348,22 +345,23 @@ all_beforelockdown2019 <- do.call("rbind", list(beijing_beforelockdown2019, wuha
 write.csv(all_beforelockdown2019, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/all_beforelockdown2019.csv")
 
 
-#city2019after guideline
+#CITY2019AFTER GUIDELINE
 chifeng_afterlockdown2019 <- subset(cities30, subset=c(id=="chifeng" & newdate >= "2019-02-13" & newdate < as.Date("2019-02-13")+80))
 head(chifeng_afterlockdown2019)
 write.csv(chifeng_afterlockdown2019, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/afterlockdown2019/chifeng_afterlockdown2019.csv")
 
-all_afterlockdown2020 <- do.call("rbind", list(beijing_afterlockdown2019, ..))
+all_afterlockdown2019 <- do.call("rbind", list(beijing_afterlockdown2019, wuhan_afterlockdown2019, xianning_afterlockdown2019, tangshan_afterlockdown2019, wuxi_afterlockdown2019, nanjing_afterlockdown2019, hangzhou_afterlockdown2019, xuzhou_afterlockdown2019, changzhou_afterlockdown2019, dalian_afterlockdown2019, nanchang_afterlockdown2019, benxi_afterlockdown2019, dandong_afterlockdown2019, fuxin_afterlockdown2019, hefei_afterlockdown2019, huludao_afterlockdown2019, panjin_afterlockdown2019, yangzhou_afterlockdown2019, jinzhou_afterlockdown2019, tianjin_afterlockdown2019, yibin_afterlockdown2019, ganzhou_afterlockdown2019, guangzhou_afterlockdown2019, chuzhou_afterlockdown2019, suzhou_afterlockdown2019, fangchenggang_afterlockdown2019, cangzhou_afterlockdown2019, shanghai_afterlockdown2019, baotou_afterlockdown2019, chifeng_afterlockdown2019))
 
 write.csv(all_afterlockdown2019, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/all_afterlockdown2019.csv")
 
-
-
-
 ```
-
  
 #plotting all cities data
+#scatterplots
+#boxplots
+
+```{r}
+
 
 library(RColorBrewer)
 display.brewer.all()
@@ -380,6 +378,28 @@ g
 #duplicate_sorting = subset(duplicate, subset=c(id == "beijing"))
 #duplicate_sorting2 = subset(duplicate_sorting, subset=c(newdate < "2020-02-10"))
 #duplicate_sorting3 = subset(duplicate_sorting2, subset=c(newdate > as.Date("2020-02-10")-80))
+
+```
+
+
+Running t-tests
+```{r ttest}
+ 
+#extract mean_before, mean_after, p-value
+ttest = t.test(all_beforelockdown2020$pm25, all_afterlockdown2020$pm25)
+ttest$estimate
+ttest$p.value
+
+#export whole ttest
+capture.output(ttest, file = "Welch_output_allcities.csv", append = TRUE)
+
+#export just description, estimate, pvalue
+estimate = ttest$estimate
+pvalue = ttest$p.value
+description = "all_beforelockdown2020 vs all_afterlockdown2020"
+capture.output(description, estimate, pvalue, file = "output_allcities.csv", append = TRUE)
+
+```
 
 
 next steps: 

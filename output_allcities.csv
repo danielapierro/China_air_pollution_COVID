@@ -1,0 +1,16 @@
+[1] "all_beforelockdown2020 vs all_afterlockdown2020"
+mean of x mean of y 
+ 137.0970  106.6104 
+[1] 7.581797e-101
+[1] "all_beforelockdown2019 vs all_afterlockdown2019"
+mean of x mean of y 
+ 137.8767  124.1202 
+[1] 1.204287e-23
+[1] "all_beforelockdown2019 vs all_beforelockdown2020"
+mean of x mean of y 
+ 137.8767  137.0970 
+[1] 0.6131182
+[1] "all_afterlockdown2019 vs all_afterlockdown2020"
+mean of x mean of y 
+ 124.1202  106.6104 
+[1] 7.181595e-48
