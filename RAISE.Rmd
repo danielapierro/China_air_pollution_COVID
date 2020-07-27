@@ -354,6 +354,10 @@ all_afterlockdown2019 <- do.call("rbind", list(beijing_afterlockdown2019, wuhan_
 
 write.csv(all_afterlockdown2019, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/all_afterlockdown2019.csv")
 
+
+all_2019 <- rbind(all_beforelockdown2019, all_afterlockdown2019)
+all_2020 <- rbind(all_beforelockdown2020, all_afterlockdown2020)
+
 ```
  
 #plotting all cities data
@@ -365,14 +369,68 @@ write.csv(all_afterlockdown2019, "/home/CAMPUS/dapa2019/R/China_air_pollution_CO
 
 library(RColorBrewer)
 display.brewer.all()
-plot(pm25 ~ newdate, data=all_afterlockdown2020, main="Pollution After Lockdown",type = "p", pch = 16, cex=.4, col=brewer.pal(3, "YlOrRd"), xlab="Date", ylab="PM 2.5") 
+
 #points instead of circles, rotate y-axis, change labels from newdate etc. to be more readable, points--> grey. instert a moving average regression line. 
 
+ggplot(all_afterlockdown2020, aes(newdate, pm25), color="firebrick")
 
-g <- ggplot(all_afterlockdown2020, aes(newdate, pm25), color="firebrick")
-g
+#type-c
+library(lattice)
+xyplot(pm25 ~ newdate, data=all_afterlockdown2020, 
+       auto.key=list(space="right"), main="Pollution After Lockdown", xlab="Date", ylab="PM 2.5", 
+       jitter.x=TRUE, jitter.y=TRUE, type=c("p","smooth"), col=brewer.pal(3, "YlOrRd"), pch = 16, cex=.4)  
+#cannot add groups=pm25. how to impose gradient?
 
-#measure of coal plants vs. hydroelectric.
+install.packages("tidyverse")
+
+g <- ggplot(all_afterlockdown2020, aes(newdate, pm25)) 
+g + scale_colour_gradient(low = "yellow", high = "red", space = "Lab", na.value = "grey50", guide = "colourbar", aesthetics = "colour") #no result
+g + scale_colour_brewer(type = "seq", palette = "YlOrRd", direction = 1, aesthetics = "colour")  #no result
+
+#for LOESS
+library(dplyr)
+  all_afterlockdown2020 %>%
+  mutate(loess = predict(loess(pm25 ~ newdate, data = all_afterlockdown2020))) %>%
+  ggplot(aes(newdate, pm25)) +
+  geom_point(color = "grey50") +
+  geom_smooth(aes(pm25 = loess)) #not working
+  
+
+
+#ggplot(all_afterlockdown2020, aes(newdate, pm25)) + 
+#geom_point(alpha=.4, size=.8, aes(colour=factor(pm25))) +
+#geom_smooth(method = "loess", se = FALSE, colour="black") + theme(legend.position='none', panel.background = element_blank()) + scale_colour_brewer(type = "seq", palette = "YlOrRd", direction = 1, aesthetics = "colour") #n too large, allowed maximum for palette YlOrRd is 9 Returning the palette you asked for with that many colors
+
+#ggplot(all_afterlockdown2020, aes(newdate, pm25)) + 
+#geom_point(alpha=.4, size=.8, aes(colour=factor(pm25))) +
+#geom_smooth(method = "loess", se = FALSE, colour="black") + theme(legend.position='none', panel.background = element_blank()) + scale_color_gradient2(low = "yellow", mid = "orange", high = "red", midpoint = mean(pm25)) #error discrete values applied to a continuous scale
+
+
+ggplot(all_afterlockdown2020, aes(newdate, pm25), jitter.x=TRUE, jitter.y=TRUE, auto.key=list(space="right")) + labs(x="Date", y="PM 2.5", title="PM 2.5 Pollution Levels After 2020 Lockdowns") +
+geom_point(alpha=.4, size=.8, aes(colour=factor(pm25))) +
+geom_smooth(method = "loess", se = FALSE, colour="black") + theme(legend.position='none', panel.background = element_blank()) #WORKS but how to change the gradient color? I'm hoping to use the brewer color palatte YlOrRd
+
+
+#overall patterns are more obvious here:
+ggplot(all_2020, aes(newdate, pm25), jitter.x=TRUE, jitter.y=TRUE, auto.key=list(space="right")) + labs(x="Date", y="PM 2.5", title="test") +
+geom_point(alpha=.4, size=.8, aes(colour=factor(pm25))) + 
+geom_smooth(method = "loess", se = FALSE, colour="black") + theme(legend.position='none', panel.background = element_blank()) #hope to graph all2019 and all2020 with a "divider" marking lockdowndate.
+
+
+plot(y=all_2020$pm25, x=all_2020$newdate)
+
+plot(all_beforelockdown2020$newdate, all_beforelockdown2020$pm25, type="p",col="red", xlim=as.Date(c("2019-10-05","2020-06-01")))
+points(all_afterlockdown2020$newdate, all_afterlockdown2020$pm25,col="green") #fix date range.
+
+
+#make grpah for each pollutatnt type
+#fix boxplots to work with means
+#find real population sizes (even if old) preferably from same source.
+#ask email questions!
+
+
+#learn overall format for a mult. regression
+#proximity to factories
 #coastal vs inland
 #general geography (eg. elevation)
 #duplicate_sorting = subset(duplicate, subset=c(id == "beijing"))
@@ -380,9 +438,33 @@ g
 #duplicate_sorting3 = subset(duplicate_sorting2, subset=c(newdate > as.Date("2020-02-10")-80))
 
 ```
+```{r boxplots}
 
+#neither work right now.
+
+geom_boxplot(outlier.colour="black", outlier.shape=16,
+             outlier.size=2, notch=FALSE)
+
+boxplot(pm25~newdate,data=all_afterlockdown2020, main="Pollution After 2020 Lockdown",
+   xlab="PM 2.5", ylab="Date")
+
+```
 
 Running t-tests
+
+```{r regression}
+
+#some of the variation in the pollutants can be explained by city population size
+#pollution decreases significantly during the 2020 lockdowns
+
+# x = time, x' = population, x" = year, y = pm25
+# data frame is: city, year, before/after, population, proximity to nearest factory, each pollutant.
+#doing * instead of + can show interaction.
+#look at covariance, anova, assumptions
+
+
+```
+
 ```{r ttest}
  
 #extract mean_before, mean_after, p-value
