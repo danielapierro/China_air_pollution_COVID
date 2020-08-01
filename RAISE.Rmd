@@ -419,8 +419,9 @@ geom_smooth(method = "loess", se = FALSE, colour="black") + theme(legend.positio
 
 plot(y=all_2020$pm25, x=all_2020$newdate)
 
-plot(all_beforelockdown2020$newdate, all_beforelockdown2020$pm25, type="p",col="red", xlim=as.Date(c("2019-10-05","2020-06-01")))
-points(all_afterlockdown2020$newdate, all_afterlockdown2020$pm25,col="green") #fix date range.
+plot(all_beforelockdown2020$newdate, all_beforelockdown2020$pm25, type="l",col="red", xlim=as.Date(c("2019-10-05","2020-06-01")))
+lines(all_afterlockdown2020$newdate, all_afterlockdown2020$pm25,col="green") #fix date range.
+
 
 
 #make grpah for each pollutatnt type
@@ -448,6 +449,42 @@ geom_boxplot(outlier.colour="black", outlier.shape=16,
 boxplot(pm25~newdate,data=all_afterlockdown2020, main="Pollution After 2020 Lockdown",
    xlab="PM 2.5", ylab="Date")
 
+#next: boxplot of the city means before, boxplot of the city means after.
+
+#NEW idea: given file with id, newdate, before vs after, pollutant levels
+
+all_beforelockdown2020$timegroup = "before_2020"
+all_afterlockdown2020$timegroup = "after_2020"
+
+head(all_afterlockdown2020)
+
+all_2020_timegroup <- rbind(all_beforelockdown2020, all_afterlockdown2020)
+write.csv(all_2020_timegroup, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/all_2020_timegroup.csv")
+str(all_2020_timegroup) #created timegroup as chr
+
+boxplot(pm25~timegroup,data=all_2020_timegroup, main="PM 2.5 Before and After 2020 Lockdown",
+   xlab="time groupings ranging 80 days each", ylab="PM 2.5") #works, but need to reoirent x axis
+
+#all four timegroups:
+all_beforelockdown2019$timegroup = "before_2019"
+all_afterlockdown2019$timegroup = "after_2019"
+all_2019_timegroup <- rbind(all_beforelockdown2019, all_afterlockdown2019)
+write.csv(all_2019_timegroup, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/all_2019_timegroup.csv")
+str(all_2019_timegroup)
+
+all_four_timegroup <- rbind(all_2019_timegroup, all_2020_timegroup)
+write.csv(all_four_timegroup, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/all_four_timegroup.csv")
+str(all_four_timegroup)
+
+boxplot(pm25~timegroup,data=all_four_timegroup, main="PM 2.5 Before and After Lockdown in 2020 and 2019", xlab="time groupings ranging 80 days each", ylab="PM 2.5") #works, but need to reoirent x axis
+
+#failed attempt
+#cities_means_pm25.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/cities_means_pm25.csv"
+#cities_means_pm25 <- read.csv(cities_means_pm25.csv)
+#boxplot(mean_pm25before2020~city,data=cities_means_pm25, main="Pollution Before and After 2020 Lockdowns", xlab="city", ylab="mean pm2.5")
+
+
+
 ```
 
 Running t-tests
@@ -456,6 +493,7 @@ Running t-tests
 
 #some of the variation in the pollutants can be explained by city population size
 #pollution decreases significantly during the 2020 lockdowns
+
 
 # x = time, x' = population, x" = year, y = pm25
 # data frame is: city, year, before/after, population, proximity to nearest factory, each pollutant.
