@@ -465,7 +465,7 @@ str(all_2020_timegroup) #created timegroup as chr
 boxplot(pm25~timegroup,data=all_2020_timegroup, main="PM 2.5 Before and After 2020 Lockdown",
    xlab="time groupings ranging 80 days each", ylab="PM 2.5") #works, but need to reoirent x axis
 
-#all four timegroups:
+#all four timegroups: 
 all_beforelockdown2019$timegroup = "before_2019"
 all_afterlockdown2019$timegroup = "after_2019"
 all_2019_timegroup <- rbind(all_beforelockdown2019, all_afterlockdown2019)
@@ -476,12 +476,16 @@ all_four_timegroup <- rbind(all_2019_timegroup, all_2020_timegroup)
 write.csv(all_four_timegroup, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/data/all_four_timegroup.csv")
 str(all_four_timegroup)
 
-boxplot(pm25~timegroup,data=all_four_timegroup, main="PM 2.5 Before and After Lockdown in 2020 and 2019", xlab="time groupings ranging 80 days each", ylab="PM 2.5") #works, but need to reoirent x axis
+boxplot(pm25~timegroup,data=all_four_timegroup, main="PM 2.5 Before and After Lockdown in 2020 and 2019", xlab="time groupings ranging 80 days each", ylab="PM 2.5") #works, and can use this format for all pollutants, but first need to reoirent x axis. also.. why am I getting so many outliers???
 
-#failed attempt
-#cities_means_pm25.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/cities_means_pm25.csv"
-#cities_means_pm25 <- read.csv(cities_means_pm25.csv)
-#boxplot(mean_pm25before2020~city,data=cities_means_pm25, main="Pollution Before and After 2020 Lockdowns", xlab="city", ylab="mean pm2.5")
+help(boxplot)
+
+#boxplot for just the means #works but only for pm25 in 2020.
+cities_means_pm25.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/cities_means_pm25_revised.csv"
+cities_means_pm25 <- read.csv(cities_means_pm25.csv)
+boxplot(pm25~before_or_after,data=cities_means_pm25, main="Pollution Means Before and After 2020 Lockdowns", xlab="city", ylab="mean pm2.5")
+head(cities_means_pm25)
+
 
 
 
