@@ -530,12 +530,33 @@ pollutiontype = "co"
 capture.output(pollutiontype, citymean, file= "means_allcities_allpollutants_afterlockdown2020.csv", append = TRUE)
 
 
+#edited together manually in Excel
+
+allmeans.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/means_allcities_allpollutants_alltimeframes.csv"
+
+allmeans <- read.csv(allmeans.csv)
+
+str(allmeans)
+
+#boxplot showing all cities, able to specify individual pollutants, using the mean of the pollutant for each city, grouped by all four time frames.
+
+boxplot(co~timeframe,data=allmeans, main="Mean Carbon Monoxide in 30 Cities Before and After Lockdown", xlab="80 Day Time Frames", ylab="Mean CO", names=c("2019 before","2019 after","2020 before","2020 after"))
+allmeans$timeframe <- factor(allmeans$timeframe , levels=c("2019_before", "2019_after", "2020_before", "2020_after"))
+ 
+#legend("topright", legend = c("80 days before the 2019 equivalent of the date lockdowns started", "80 days after the 2019 equivalent of the date lockdowns started", "80 days before the date lockdowns started in 2020", "80 days after the date lockdowns started in 2020"))
+#trouble including legend; it blocks view of graph.
+
+#creates tables summarizing the data shown in the boxplots
+summary()
+
 ```
 
 
 Running t-tests
 
 ```{r regression}
+
+
 
 #some of the variation in the pollutants can be explained by city population size
 #pollution decreases significantly during the 2020 lockdowns
