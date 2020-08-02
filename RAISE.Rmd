@@ -412,7 +412,7 @@ geom_smooth(method = "loess", se = FALSE, colour="black") + theme(legend.positio
 
 
 #overall patterns are more obvious here:
-ggplot(all_2020, aes(newdate, pm25), jitter.x=TRUE, jitter.y=TRUE, auto.key=list(space="right")) + labs(x="Date", y="PM 2.5", title="test") +
+ggplot(all_2020, aes(newdate, pm25), jitter.x=TRUE, jitter.y=TRUE, auto.key=list(space="right")) + labs(x="Date", y="PM 2.5", title="PM 2.5 levels during 80 days before and after lockdown") +
 geom_point(alpha=.4, size=.8, aes(colour=factor(pm25))) + 
 geom_smooth(method = "loess", se = FALSE, colour="black") + theme(legend.position='none', panel.background = element_blank()) #hope to graph all2019 and all2020 with a "divider" marking lockdowndate.
 
@@ -477,6 +477,7 @@ write.csv(all_four_timegroup, "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID
 str(all_four_timegroup)
 
 boxplot(pm25~timegroup,data=all_four_timegroup, main="PM 2.5 Before and After Lockdown in 2020 and 2019", xlab="time groupings ranging 80 days each", ylab="PM 2.5") #works, and can use this format for all pollutants, but first need to reoirent x axis. also.. why am I getting so many outliers???
+#boxplot for all data, not just the means.
 
 help(boxplot)
 
@@ -487,9 +488,50 @@ boxplot(pm25~before_or_after,data=cities_means_pm25, main="Pollution Means Befor
 head(cities_means_pm25)
 
 
+```
+creating boxplots of means for each pollutant.
+first: create one csv with mean data from all cities.
+
+```{r}
+
+#find the mean for each pollutant within each time frame for each city.
+#created: 
+#means_allcities_allpollutants_beforelockdown2019.csv 
+#means_allcities_allpollutants_afterlockdown2019.csv 
+#means_allcities_allpollutants_beforelockdown2020.csv 
+#means_allcities_allpollutants_afterlockdown2020.csv 
+
+description = "yibin_afterlockdown2020"
+
+capture.output(description, file= "means_allcities_allpollutants_afterlockdown2020.csv", append = TRUE)
+
+citymean <- mean(yibin_afterlockdown2020$pm25, trim=0, na.rm=TRUE)
+pollutiontype = "pm25"
+capture.output(pollutiontype, citymean, file= "means_allcities_allpollutants_afterlockdown2020.csv", append = TRUE)
+
+citymean <- mean(yibin_afterlockdown2020$pm10, trim=0, na.rm=TRUE)
+pollutiontype = "pm10"
+capture.output(pollutiontype, citymean, file= "means_allcities_allpollutants_afterlockdown2020.csv", append = TRUE)
+
+citymean <- mean(yibin_afterlockdown2020$o3, trim=0, na.rm=TRUE)
+pollutiontype = "o3"
+capture.output(pollutiontype, citymean, file= "means_allcities_allpollutants_afterlockdown2020.csv", append = TRUE)
+
+citymean <- mean(yibin_afterlockdown2020$no2, trim=0, na.rm=TRUE)
+pollutiontype = "no2"
+capture.output(pollutiontype, citymean, file= "means_allcities_allpollutants_afterlockdown2020.csv", append = TRUE)
+
+citymean <- mean(yibin_afterlockdown2020$so2, trim=0, na.rm=TRUE)
+pollutiontype = "so2"
+capture.output(pollutiontype, citymean, file= "means_allcities_allpollutants_afterlockdown2020.csv", append = TRUE)
+
+citymean <- mean(yibin_afterlockdown2020$co, trim=0, na.rm=TRUE)
+pollutiontype = "co"
+capture.output(pollutiontype, citymean, file= "means_allcities_allpollutants_afterlockdown2020.csv", append = TRUE)
 
 
 ```
+
 
 Running t-tests
 
