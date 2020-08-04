@@ -555,8 +555,22 @@ summary()
 Running t-tests
 
 ```{r regression}
+regressiondata.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/regression.csv"
+regressiondata <- read.csv(regressiondata.csv)
+
+str(regressiondata)
+
+regression <- lm(pm25 ~ timeframe+population, regressiondata) #only three time frames showingup, and the tiny values make no sense
+summary(regression)
 
 
+#to test, created regression2020only.csv file.
+regressiondata2020only.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/regression2020only.csv"
+regressiondata2020only <- read.csv(regressiondata2020only.csv)
+
+regression <- lm(pm25 ~ timeframe+population, regressiondata2020only) #only three time frames showingup, and the tiny values make no sense
+summary(regression)
+anova(regression) #why are DF = 1 for both? 
 
 #some of the variation in the pollutants can be explained by city population size
 #pollution decreases significantly during the 2020 lockdowns
