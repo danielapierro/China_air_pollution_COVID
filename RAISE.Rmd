@@ -555,6 +555,9 @@ summary()
 Running t-tests
 
 ```{r regression}
+
+#how much of the variation in each pollutant is accounted for by time frame (by year? by before/after?), by population?
+
 regressiondata.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/regression.csv"
 regressiondata <- read.csv(regressiondata.csv)
 
@@ -562,22 +565,23 @@ str(regressiondata)
 
 regression <- lm(pm25 ~ timeframe+population, regressiondata) #only three time frames showingup, and the tiny values make no sense
 summary(regression)
-
+anova(regression)
 
 #to test what's going wrong, I created regression2020only.csv file.
-regressiondata2020only.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/regression2020only.csv"
-regressiondata2020only <- read.csv(regressiondata2020only.csv)
+#also created a file taht includes comparing beforevsafter in 2020 and 2020vs2019 for "after" timeframe
+regression.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/regression.csv"
+regression <- read.csv(regression.csv)
 
-regression <- lm(pm25 ~ timeframe+population, regressiondata2020only) #only three time frames showingup, and the tiny values make no sense
-summary(regression)
-anova(regression) #why are DF = 1 for both? 
+plot <- lm(pm25 ~ timeframe+population, regression) #only three time frames showingup, and the tiny values make no sense
+summary(plot)
+anova(plot) #why are DF = 1 for both? 
 
 #some of the variation in the pollutants can be explained by city population size
 #pollution decreases significantly during the 2020 lockdowns
 
 
 # x = time, x' = population, x" = year, y = pm25
-# data frame is: city, year, before/after, population, proximity to nearest factory, each pollutant.
+# data frame is: city, [year, before/after], population, proximity to nearest factory, each pollutant.
 #doing * instead of + can show interaction.
 #look at covariance, anova, assumptions
 
@@ -602,26 +606,20 @@ capture.output(description, estimate, pvalue, file = "output_allcities.csv", app
 
 ```
 
+run BACI analysis to see how % decreased
 
-next steps: 
+```{r BACI}
 
-- Select Data Before and After Lockdown. file is city_size_lockdowndate.csv
-- Different for each city? Yes 
-- 80 days
+#hist(allmeans$no2)
 
-#merge files, or extract by city, date. before/after by date. subset(). how can I extract a window of dates by factor. create different data frames by each window. new column where: if date before lockdown, -1, if date after lockdown +1, get rid of zeros. create binary columns.
+power.BACI(change, change.type="M", nt, nc, parst, parsc, distribution="normal", test="P", alpha=0.05, nsims=1000)
+#change.type M dictates PERCENTAGE change of post-treatment mean relative to pre-treatment mean
+#very confused how to use this!
 
-  - subset()
-  
- # subset(df, var1 < city_size_lockdowndate.csv$value )
-  
-  #alternative approach: use conditional formatting to create +1 and -1 column
-  # if (test_expression) {
-statement
-}
-  x <- 5
-if(x > 0){
-print("Positive number")
-}
+
+
+```
+
+
 
 
