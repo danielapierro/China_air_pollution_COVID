@@ -558,14 +558,7 @@ Running t-tests
 
 #how much of the variation in each pollutant is accounted for by time frame (by year? by before/after?), by population?
 
-regressiondata.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/regression.csv"
-regressiondata <- read.csv(regressiondata.csv)
-
-str(regressiondata)
-
-regression <- lm(pm25 ~ timeframe+population, regressiondata) #only three time frames showingup, and the tiny values make no sense
-summary(regression)
-anova(regression)
+#hypothesis: pollutant levels decreased significantly after lockdown in 2020, as compared with before lockdown, controlling for seasonal effects.
 
 #to test what's going wrong, I created regression2020only.csv file.
 #also created a file taht includes comparing beforevsafter in 2020 and 2020vs2019 for "after" timeframe
@@ -609,17 +602,261 @@ capture.output(description, estimate, pvalue, file = "output_allcities.csv", app
 run BACI analysis to see how % decreased
 
 ```{r BACI}
+#group into 3 city size categories --> run an ANOVA
+#pollutant as a function of after - before and city size. BACI.
+#aov delta citysize
+#before = WINTER 
+#after = SPRING
 
-#hist(allmeans$no2)
 
-power.BACI(change, change.type="M", nt, nc, parst, parsc, distribution="normal", test="P", alpha=0.05, nsims=1000)
-#change.type M dictates PERCENTAGE change of post-treatment mean relative to pre-treatment mean
-#very confused how to use this!
+#RESTRUCTURE FILE eg. pm25_before_2020, _after_2020, ditto for 2019.
+# delta = 2019(winter-spring) - 2020(winter-spring)
+
+regression_withdelta.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/regression_withdelta.csv"
+regression_withdelta <- read.csv(regression_withdelta.csv)
+
+str(regression_withdelta)
+
+pm25.aov <- aov(pm25_2020after ~ pm25_2020minus2019 + population_discrete, data=regression_withdelta) #broke population into three categories
+summary(pm25.aov) #run for every pollutant
+#plot(pm25_2020after ~ pm25_2020minus2019, data=regression_withdelta)
+#hist(regression_withdelta$pm25_2020afterminus2020before)
+#hist(regression_withdelta$pm25_2019afterminus2019before)
+#hist(regression_withdelta$pm25_2020minus2019)
+
+#the anova is ancova? population is categorical, and have about the same number of cities in each category. analysis of covariance. see if slope and p-value are significant based on *
+#presentation: tell a narrative, showing results thorughout.
 
 
+
+#alternative approach: run two regressions per pollutant, one for each yearly data set. tehn compare experimentla and control results.
+#expect population to explain more of the 2020 data set.
+
+regression2020only.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/regression2020only.csv"
+regression2020only <- read.csv(regression2020only.csv)
+str(regression_withdelta)
+
+pm25.aov <- aov(pm25 ~ timeframe + population, data=regression2020only) #timeframe is significant
+summary(pm25.aov)
+
+#alt approach edited for population to be discrete
+
+
+regression2020only.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/regression2020only.csv"
+regression2020only <- read.csv(regression2020only.csv)
+str(regression2020only)
+
+pm25.aov <- aov(pm25 ~ timeframe + population_discrete, data=regression2020only) #timeframe is significant
+summary(pm25.aov)
 
 ```
 
+```{r}
+
+#now trying a hierarchical multiple regression
+#(pm25_2020after ~ population + pm25before + pm25_2019after, dataset)
+
+hierarchical_reg.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/hierarchical_reg.csv"
+hierarchical_reg <- read.csv(hierarchical_reg.csv)
+str(hierarchical_reg)
+
+var1 <- lm(formula = pm25_after2020 ~ population_30cities, data = hierarchical_reg) #plot of residuals shows this might not be a linear model
+var2 <- lm(formula = pm25_after2020 ~ population_30cities + pm25_after2019, data = hierarchical_reg)
+var3 <- lm(formula = pm25_after2020 ~ population_30cities + pm25_after2019 + pm25_before2020, data = hierarchical_reg)
+anova(var1,var2,var3)
+
+#reformatted
+hierarchical_reg_reformatted.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/hierarchical_reg_reformatted.csv"
+hierarchical_reg_reformatted <- read.csv(hierarchical_reg_reformatted.csv)
+str(hierarchical_reg_reformatted)
+
+var1 <- lm(formula = pm25_all2020 ~ population_discrete, data = hierarchical_reg_reformatted) #plot of residuals shows this might not be a linear model
+plot(var1) #see constant leverage
+var2 <- lm(formula = pm25_all2020 ~ population_discrete + pm25_all2019, data = hierarchical_reg_reformatted)
+var3 <- lm(formula = pm25_all2020 ~ population_discrete + pm25_all2019 + beforevsafter, data = hierarchical_reg_reformatted)
+anova(var1,var2,var3)
+
+#revised to include industrial GRP
+hierarchical_reg_grp.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/hierarchical_reg_discrete_withfactories.csv"
+hierarchical_reg_grp <- read.csv(hierarchical_reg_grp.csv)
+str(hierarchical_reg_grp)
+
+var_initial <- lm(formula = pm25_all2020 ~ 1, data = hierarchical_reg_grp)
+var1 <- lm(formula = pm25_all2020 ~ population_30cities, data = hierarchical_reg_grp) #plot of residuals shows this might not be a linear model
+plot(var1) #see constant leverage
+var2 <- lm(formula = pm25_all2020 ~ population_30cities + industry, data = hierarchical_reg_grp)
+var3 <- lm(formula = pm25_all2020 ~ population_30cities + industry + pm25_all2019, data = hierarchical_reg_grp)
+var4 <- lm(formula = pm25_all2020 ~ population_30cities + industry + pm25_all2019 + beforevsafter, data = hierarchical_reg_grp)
+anova(var_initial, var1,var2,var3, var4)
+
+summary(var4)
 
 
+#boxplots for 3 city sizes
+#scatterplot color coded for covid
 
+```
+
+#delta approach results
+#only reports change not decrease!
+                   Df Sum Sq Mean Sq F value Pr(>F)
+pm25_2020minus2019  1     66   66.17   0.242  0.627
+population          1    251  251.36   0.918  0.346
+Residuals          27   7390  273.70               
+90 observations deleted due to missingness
+
+#delta approach results with 3 discrete population groupings
+                    Df Sum Sq Mean Sq F value Pr(>F)
+pm25_2020minus2019   1    388   388.0   1.436  0.242
+population_discrete  2    295   147.6   0.546  0.586
+Residuals           26   7024   270.2               
+90 observations deleted due to missingness
+
+
+#alternative approach results
+#2019only
+            Df Sum Sq Mean Sq F value Pr(>F)  
+timeframe    1   2900  2899.5   6.652 0.0125 *
+population   1    875   875.5   2.008 0.1619  
+Residuals   57  24847   435.9  
+
+#2020only
+            Df Sum Sq Mean Sq F value   Pr(>F)    
+timeframe    1  13941   13941  28.597 1.64e-06 ***
+population   1   1719    1719   3.527   0.0655 .  
+Residuals   57  27788     488                     
+
+
+#hierarchical multiple regression. 
+#(degrees of freedom here are confusing)
+Analysis of Variance Table 
+
+Model 1: pm25_after2020 ~ population_30cities
+Model 2: pm25_after2020 ~ population_30cities + pm25_after2019
+Model 3: pm25_after2020 ~ population_30cities + pm25_after2019 + pm25_before2020
+  Res.Df    RSS Df Sum of Sq       F    Pr(>F)    
+1     28 7445.3                                   
+2     27 2121.1  1    5324.2 88.9942 7.037e-10 ***
+3     26 1555.5  1     565.6  9.4537  0.004906 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+#reformatted. seems the most effective!
+Analysis of Variance Table
+
+Model 1: pm25_all2020 ~ population_30cities
+Model 2: pm25_all2020 ~ population_30cities + pm25_all2019
+Model 3: pm25_all2020 ~ population_30cities + pm25_all2019 + beforevsafter
+  Res.Df   RSS Df Sum of Sq       F    Pr(>F)    
+1     58 41729                                   
+2     57 15830  1   25899.3 132.352 2.236e-16 ***
+3     56 10958  1    4871.7  24.896 6.218e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#reformatted, and making population discrete makes little/no difference.
+Analysis of Variance Table
+
+Model 1: pm25_all2020 ~ population_discrete
+Model 2: pm25_all2020 ~ population_discrete + pm25_all2019
+Model 3: pm25_all2020 ~ population_discrete + pm25_all2019 + beforevsafter
+  Res.Df   RSS Df Sum of Sq       F    Pr(>F)    
+1     57 41131                                   
+2     56 15026  1     26105 141.863 < 2.2e-16 ***
+3     55 10121  1      4905  26.655 3.457e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#CHANGE to include GRP
+
+#including industrial gross regional product where the region is each city's province or autonomous region
+Analysis of Variance Table
+
+Model 1: pm25_all2020 ~ 1
+Model 2: pm25_all2020 ~ population_discrete
+Model 3: pm25_all2020 ~ population_discrete + industry
+Model 4: pm25_all2020 ~ population_discrete + industry + pm25_all2019
+Model 5: pm25_all2020 ~ population_discrete + industry + pm25_all2019 + 
+    beforevsafter
+  Res.Df   RSS Df Sum of Sq        F    Pr(>F)    
+1     59 43449                                    
+2     57 41131  2    2317.7   7.5306  0.001304 ** 
+3     56 41065  1      66.3   0.4307  0.514426    
+4     55 12698  1   28366.8 184.3378 < 2.2e-16 ***
+5     54  8310  1    4388.3  28.5167   1.9e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+#summary statistics: questions:
+#why are there 54 DF???
+#why is medium population significant, and big nonexistent in the data?
+Call:
+lm(formula = pm25_all2020 ~ population_discrete + industry + 
+    pm25_all2019 + beforevsafter, data = hierarchical_reg_grp)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-20.142  -7.517  -0.605   5.147  66.137 
+
+Coefficients:
+                            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)               -0.1059525  9.9437266  -0.011  0.99154    
+population_discretemedium  9.6812602  3.9366970   2.459  0.01716 *  
+population_discretesmall   4.0572823  4.1974786   0.967  0.33805    
+industry                  -0.0005519  0.0001609  -3.431  0.00116 ** 
+pm25_all2019               0.8896606  0.0804611  11.057 1.73e-15 ***
+beforevsafterbefore       18.1173713  3.3927008   5.340 1.90e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 12.41 on 54 degrees of freedom
+Multiple R-squared:  0.8087,	Adjusted R-squared:  0.791 
+F-statistic: 45.67 on 5 and 54 DF,  p-value: < 2.2e-16
+
+#same as above with continuous not discrete population
+Analysis of Variance Table
+
+Model 1: pm25_all2020 ~ 1
+Model 2: pm25_all2020 ~ population_30cities
+Model 3: pm25_all2020 ~ population_30cities + industry
+Model 4: pm25_all2020 ~ population_30cities + industry + pm25_all2019
+Model 5: pm25_all2020 ~ population_30cities + industry + pm25_all2019 + 
+    beforevsafter
+  Res.Df   RSS Df Sum of Sq        F    Pr(>F)    
+1     59 43449                                    
+2     58 41729  1    1719.5  10.4843  0.002043 ** 
+3     57 41484  1     245.1   1.4946  0.226721    
+4     56 13451  1   28033.2 170.9278 < 2.2e-16 ***
+5     55  9020  1    4430.7  27.0156 3.051e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+#summary statistics
+Call:
+lm(formula = pm25_all2020 ~ population_30cities + industry + 
+    pm25_all2019 + beforevsafter, data = hierarchical_reg_grp)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-18.091  -6.211  -1.306   5.058  70.779 
+
+Coefficients:
+                      Estimate Std. Error t value Pr(>|t|)    
+(Intercept)          6.354e+00  1.065e+01   0.597  0.55320    
+population_30cities -3.157e-07  2.684e-07  -1.176  0.24458    
+industry            -5.250e-04  1.527e-04  -3.438  0.00113 ** 
+pm25_all2019         8.833e-01  8.312e-02  10.627 6.04e-15 ***
+beforevsafterbefore  1.821e+01  3.503e+00   5.198 3.05e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 12.81 on 55 degrees of freedom
+Multiple R-squared:  0.7924,	Adjusted R-squared:  0.7773 
+F-statistic: 52.48 on 4 and 55 DF,  p-value: < 2.2e-16
+
+#multiple r-squared values from the summary() for each individual var#. 
+#Compared r squared values to check for multicollinearity and none found.
+var1 Multiple R-squared:  0.03958 #population
+var2 Multiple R-squared:  0.04522 #industrial GRP
+var3 Multiple R-squared:  0.6904 #expected seasonal changes
+var4 Multiple R-squared:  0.7924 #lockdown
+
+#REPEAT for other pollutants (?)
