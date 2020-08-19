@@ -691,6 +691,22 @@ anova(var_initial, var1,var2,var3, var4)
 
 summary(var4)
 
+#changed the dependent variable to be pm25_after2020 and reformatted the excel
+hierarchical_reg_grp_2.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/hierarchical_reg_discrete_withfactories_reformatteddependentvar.csv"
+hierarchical_reg_grp_2 <- read.csv(hierarchical_reg_grp_2.csv)
+str(hierarchical_reg_grp_2)
+
+var_initial <- lm(formula = pm25_2020after ~ 1, data = hierarchical_reg_grp_2)
+var1 <- lm(formula = pm25_2020after ~ population_30cities, data = hierarchical_reg_grp_2) #plot of residuals shows this might not be a linear model
+var2 <- lm(formula = pm25_2020after ~ population_30cities + industry, data = hierarchical_reg_grp_2)
+var3 <- lm(formula = pm25_2020after ~ population_30cities + industry + pm25_2019after, data = hierarchical_reg_grp_2)
+var4 <- lm(formula = pm25_2020after ~ population_30cities + industry + pm25_2019after + pm25_2020before, data = hierarchical_reg_grp_2)
+anova(var_initial, var1,var2,var3, var4)
+
+summary(var2)
+
+summary(lm(formula = pm25_2020after ~ population_30cities + industry + pm25_2019after + pm25_2020before, data = hierarchical_reg_grp_2))
+summary(lm(formula = pm25_2020after ~ pm25_2020before, data = hierarchical_reg_grp_2))
 
 #boxplots for 3 city sizes
 #scatterplot color coded for covid
@@ -741,7 +757,7 @@ Model 3: pm25_after2020 ~ population_30cities + pm25_after2019 + pm25_before2020
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
 
-#reformatted. seems the most effective!
+#reformatted. seems more effective!
 Analysis of Variance Table
 
 Model 1: pm25_all2020 ~ population_30cities
@@ -859,4 +875,34 @@ var2 Multiple R-squared:  0.04522 #industrial GRP
 var3 Multiple R-squared:  0.6904 #expected seasonal changes
 var4 Multiple R-squared:  0.7924 #lockdown
 
-#REPEAT for other pollutants (?)
+
+
+#reformatted to change the dependent variable (unsure if I should even have done this)
+Analysis of Variance Table
+
+Model 1: pm25_2020after ~ 1
+Model 2: pm25_2020after ~ population_30cities
+Model 3: pm25_2020after ~ population_30cities + industry
+Model 4: pm25_2020after ~ population_30cities + industry + pm25_2019after
+Model 5: pm25_2020after ~ population_30cities + industry + pm25_2019after + pm25_2020before
+  Res.Df    RSS Df Sum of Sq        F    Pr(>F)    
+1     29 7707.5                                    
+2     28 7445.3  1     262.2   5.4270   0.02820 *  
+3     27 7391.8  1      53.5   1.1080   0.30260    
+4     26 1461.4  1    5930.4 122.7348 3.903e-11 ***
+5     25 1208.0  1     253.4   5.2438   0.03074 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#with summary(var#)
+var1 Multiple R-squared:  0.03402 #population
+var2 Multiple R-squared:  0.04097 #industrial GRP
+var3 Multiple R-squared:  0.8104 #compared to the same months in 2019
+var4 Multiple R-squared:  0.8433 #compared to before lockdown in 2020
+
+#with summary(lm(formula = pm25_2020after ~ #one_variable#, data = hierarchical_reg_grp_2))
+population_30cities Multiple R-squared:  0.03402
+industry            Multiple R-squared:  0.006941
+pm25_2019after      Multiple R-squared:  0.7133
+pm25_2020before     Multiple R-squared:  0.5757
+
