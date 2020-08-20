@@ -649,6 +649,8 @@ str(regression2020only)
 pm25.aov <- aov(pm25 ~ timeframe + population_discrete, data=regression2020only) #timeframe is significant
 summary(pm25.aov)
 
+#boxplots for 3 city sizes
+#scatterplot color coded for covid
 ```
 
 ```{r}
@@ -691,7 +693,7 @@ anova(var_initial, var1,var2,var3, var4)
 
 summary(var4)
 
-#changed the dependent variable to be pm25_after2020 and reformatted the excel
+#changed the dependent variable to be pm25_after2020 and reformatted the csv
 hierarchical_reg_grp_2.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/hierarchical_reg_discrete_withfactories_reformatteddependentvar.csv"
 hierarchical_reg_grp_2 <- read.csv(hierarchical_reg_grp_2.csv)
 str(hierarchical_reg_grp_2)
@@ -703,14 +705,9 @@ var3 <- lm(formula = pm25_2020after ~ population_30cities + industry + pm25_2019
 var4 <- lm(formula = pm25_2020after ~ population_30cities + industry + pm25_2019after + pm25_2020before, data = hierarchical_reg_grp_2)
 anova(var_initial, var1,var2,var3, var4)
 
-summary(var2)
+summary(var4)
 
-summary(lm(formula = pm25_2020after ~ population_30cities + industry + pm25_2019after + pm25_2020before, data = hierarchical_reg_grp_2))
-summary(lm(formula = pm25_2020after ~ pm25_2020before, data = hierarchical_reg_grp_2))
-
-#boxplots for 3 city sizes
-#scatterplot color coded for covid
-
+#summary(lm(formula = pm25_2020after ~ pm25_2020before, data = hierarchical_reg_grp_2))
 ```
 
 #delta approach results
@@ -894,13 +891,15 @@ Model 5: pm25_2020after ~ population_30cities + industry + pm25_2019after + pm25
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-#with summary(var#)
+#with summary(var#) hierarchical method
+#more meaningful statistic
 var1 Multiple R-squared:  0.03402 #population
 var2 Multiple R-squared:  0.04097 #industrial GRP
 var3 Multiple R-squared:  0.8104 #compared to the same months in 2019
 var4 Multiple R-squared:  0.8433 #compared to before lockdown in 2020
 
-#with summary(lm(formula = pm25_2020after ~ #one_variable#, data = hierarchical_reg_grp_2))
+#with summary(lm(formula = pm25_2020after ~ #one_variable, data = hierarchical_reg_grp_2)) 
+#less meaningful statistic
 population_30cities Multiple R-squared:  0.03402
 industry            Multiple R-squared:  0.006941
 pm25_2019after      Multiple R-squared:  0.7133
