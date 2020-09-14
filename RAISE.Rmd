@@ -747,11 +747,6 @@ summary(var2)
 help(AIC)
 
 
-#presenting notes:
-#can include concerns abt stat method, this is what I think i see"
-#use vidgrid!
-#50% of time is background and motivation.
-
 
 ```
 
