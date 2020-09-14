@@ -275,8 +275,10 @@ head(cities30)
 
 
 ```{r}
-plot(pm25 ~ newdate, data=cities30) #points instead of circles, rotate y-axis, change labels from newdate etc. to be more readable, points--> grey. instert a moving average regression line. 
+plot(pm25 ~ newdate, data=cities30, pch=20, main="Seasonal PM 2.5 Patterns",
+  xlab="Time", ylab="Daily PM 2.5 AQI", col="darkblue") #points instead of circles, rotate y-axis, change labels from newdate etc. to be more readable, points--> grey. instert a moving average regression line. 
 #look into AIC
+help(blues9)
 str(cities30)
 ```
 
@@ -412,10 +414,13 @@ geom_smooth(method = "loess", se = FALSE, colour="black") + theme(legend.positio
 
 
 #overall patterns are more obvious here:
-ggplot(all_2020, aes(newdate, pm25), jitter.x=TRUE, jitter.y=TRUE, auto.key=list(space="right")) + labs(x="Date", y="PM 2.5", title="PM 2.5 levels during 80 days before and after lockdown") +
+ggplot(all_2020, aes(newdate, pm25), jitter.x=TRUE, jitter.y=TRUE, auto.key=list(space="right")) + labs(x="Date", y="PM 2.5 AQI", title="PM 2.5 during 80 days before and after 2020 lockdown") +
 geom_point(alpha=.4, size=.8, aes(colour=factor(pm25))) + 
 geom_smooth(method = "loess", se = FALSE, colour="black") + theme(legend.position='none', panel.background = element_blank()) #hope to graph all2019 and all2020 with a "divider" marking lockdowndate.
 
+ggplot(all_2019, aes(newdate, pm25), jitter.x=TRUE, jitter.y=TRUE, auto.key=list(space="right")) + labs(x="Date", y="PM 2.5 AQI", title="PM 2.5 during 80 days before and after 2019 lockdown") +
+geom_point(alpha=.4, size=.8, aes(colour=factor(pm25))) + 
+geom_smooth(method = "loess", se = FALSE, colour="black") + theme(legend.position='none', panel.background = element_blank())
 
 plot(y=all_2020$pm25, x=all_2020$newdate)
 
@@ -479,7 +484,6 @@ str(all_four_timegroup)
 boxplot(pm25~timegroup,data=all_four_timegroup, main="PM 2.5 Before and After Lockdown in 2020 and 2019", xlab="time groupings ranging 80 days each", ylab="PM 2.5") #works, and can use this format for all pollutants, but first need to reoirent x axis. also.. why am I getting so many outliers???
 #boxplot for all data, not just the means.
 
-help(boxplot)
 
 #boxplot for just the means #works but only for pm25 in 2020.
 cities_means_pm25.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/cities_means_pm25_revised.csv"
@@ -540,7 +544,7 @@ str(allmeans)
 
 #boxplot showing all cities, able to specify individual pollutants, using the mean of the pollutant for each city, grouped by all four time frames.
 
-boxplot(co~timeframe,data=allmeans, main="Mean Carbon Monoxide in 30 Cities Before and After Lockdown", xlab="80 Day Time Frames", ylab="Mean CO", names=c("2019 before","2019 after","2020 before","2020 after"))
+boxplot(so2~timeframe,data=allmeans, main="Mean Sulfur Dioxide Before and After Lockdown", xlab="80 Day Time Frames", ylab="Mean SO2 AQI", names=c("2019 before","2019 after","2020 before","2020 after"), col=c('powderblue', 'powderblue','mistyrose','mistyrose'))
 allmeans$timeframe <- factor(allmeans$timeframe , levels=c("2019_before", "2019_after", "2020_before", "2020_after"))
  
 #legend("topright", legend = c("80 days before the 2019 equivalent of the date lockdowns started", "80 days after the 2019 equivalent of the date lockdowns started", "80 days before the date lockdowns started in 2020", "80 days after the date lockdowns started in 2020"))
@@ -691,7 +695,7 @@ var3 <- lm(formula = pm25_all2020 ~ population_30cities + industry + pm25_all201
 var4 <- lm(formula = pm25_all2020 ~ population_30cities + industry + pm25_all2019 + beforevsafter, data = hierarchical_reg_grp)
 anova(var_initial, var1,var2,var3, var4)
 
-summary(var4)
+summary(var2)
 
 #changed the dependent variable to be pm25_after2020 and reformatted the csv
 hierarchical_reg_grp_2.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/hierarchical_reg_discrete_withfactories_reformatteddependentvar.csv"
@@ -715,6 +719,32 @@ summary(var4)
 AIC(var_initial,var1,var2,var3,var4)
 #high evidence for model 3 and 4. amount of evidence supporting 4 is slightly greater than 3.
 #penalizes for number of parameters
+
+hierarchical_reg_grp.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/hierarchical_reg_discrete_withfactories.csv"
+hierarchical_reg_grp <- read.csv(hierarchical_reg_grp.csv)
+str(hierarchical_reg_grp)
+
+var_initial <- lm(formula = pm25_all2020 ~ 1, data = hierarchical_reg_grp)
+var1 <- lm(formula = pm25_all2020 ~ population_30cities, data = hierarchical_reg_grp) #plot of residuals shows this might not be a linear model
+#plot(var1) #see constant leverage
+var2 <- lm(formula = pm25_all2020 ~ population_30cities + industry, data = hierarchical_reg_grp)
+AIC(var_initial, var1,var2)
+
+summary(var2)
+
+#or...
+hierarchical_reg_grp_2.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/hierarchical_reg_discrete_withfactories_reformatteddependentvar.csv"
+hierarchical_reg_grp_2 <- read.csv(hierarchical_reg_grp_2.csv)
+str(hierarchical_reg_grp_2)
+
+var_initial <- lm(formula = pm25_2020after ~ 1, data = hierarchical_reg_grp_2)
+var1 <- lm(formula = pm25_2020after ~ population_30cities, data = hierarchical_reg_grp_2) #plot of residuals shows this might not be a linear model
+var2 <- lm(formula = pm25_2020after ~ population_30cities + industry, data = hierarchical_reg_grp_2)
+AIC(var_initial, var1,var2)
+
+summary(var2)
+
+help(AIC)
 
 
 #presenting notes:
@@ -932,72 +962,15 @@ var4	6	208.0015
 #high evidence for model 3 and 4. Amount of evidence supporting 4 is slightly greater than 3.
 #penalizes for number of parameters
 
+when redone, with dependent var = all 2020
+var1	3	568.9495	#population	
+var2	4	570.5961	#industrial grp
 
+when redone, with dependent var = 2020after
+var1	3	256.5606	#population
+var2	4	258.3441	#industrial grp
+#this just means we can trust the baci data more.
 ```{r}
-#
-
- 
-
-abundance = matrix(c(
-
-75, 1, 1, 75, 0, 1, 75, 0, 0, 75, 2, 6,
-
-75, 47, 103, 75, 63, 36, 75, 78, 6,
-
-75, 16, 143, 75, 143, 145, 75, 28, 9,
-
-75, 4, 15, 75, 0, 2, 76, 3, 1,
-
-76, 28, 108, 76, 51, 117, 76, 17, 41,
-
-76, 19, 23, 76, 40, 44, 76, 1, 4,
-
-76, 2, 0, 77, 0, 0, 77, 0, 0,
-
-77, 2, 26, 77, 2, 4, 77, 4, 10), 3)
-
- 
-#control is 2019, impact is 2020
- 
-
-baci.df = data.frame(Event=c(rep("Before_Lockdown", 12), rep("After_Lockdown", 13)), Year=abundance[1,], C_2019=abundance[2,], I_2020=abundance[3,]) #can take year out, maybe change to cityname
-
-baci.df
-
-str(baci.df)
-
-t.test(baci.df$C_2019, baci.df$I_2020)
-
- 
-
- 
-
-baci.df$delta = baci.df$C_2019 - baci.df$I_2020
-
- 
-
-t.test(baci.df$delta) #see if results are analagous
-
- 
-
-t.test(baci.df$delta[1:12], baci.df$delta[13:25]) #picks subset of data based on row names. is the delta different btween I and C?
-
-boxplot(delta ~ Event, data=baci.df)
-
- 
-
-#  Better format for ANOVA
-#USE THIS!!!
-
-#baci.df2 = data.frame(Time=rep(1:25,2), Site=c(rep("C_2019", 25), rep("I_2020", 25)),
-
-#Lockdown=rep(c(rep("Before", 12), rep("After", 13)),2),
-
-#Year=rep(abundance[1,],2),
-
-#PM25=c(abundance[2,], abundance[3,])); baci.df2
-
-#baci.df2 #abundance is the actual data numbers. can create data set differently but needs to be same format. 
 
 baci.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/baci.csv"
 baci <- read.csv(baci.csv)
@@ -1005,45 +978,295 @@ str(baci)
 
 attach(baci)
 
-baci[Event=="before_lockdown",]
-mean(Abundance[Event=="before_lockdown"]) #prints a number
+baci[Event=="before_lockdown",2]
+mean(baci[Event=="before_lockdown",2]) #for C_2019 137.9755
 
-baci[Event=="after_lockdown",]
-mean(Abundance[Event=="after_lockdown"]) #prints NA???
+baci[Event=="after_lockdown",2]
+mean(baci[Event=="after_lockdown",2]) #for C_2019 124.0723
 
-SS_before = sum((mean(Abundance[Event=="before_lockdown"]) - Abundance[Event=="before_lockdown"])^2); SS_before
-SS_after = sum((mean(Abundance[Event=="after_lockdown"]) - Abundance[Event=="after_lockdown"])^2); SS_after #prints NA
+baci[Event=="before_lockdown",3]
+mean(baci[Event=="before_lockdown",3]) #for I_2020 137.097
 
-(SS_before + SS_after)/29 #should I use 29?
+baci[Event=="after_lockdown",3]
+mean(baci[Event=="after_lockdown",3]) #for I_2020 106.6104
 
- 
 
-#2574*23
+baci2.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/baci_updated.csv"
+baci2 <- read.csv(baci2.csv)
+str(baci2)
+baci2$controlvsimpact = as.factor(baci2$X2019vs2020)
 
-(length(Abundance[Event=="before_lockdown"])+ length(Abundance[Event=="after_lockdown"])-2)
+baci.aov <- aov(pm2.5 ~ controlvsimpact + beforevsafter + controlvsimpact:beforevsafter, data=baci2); summary(baci.aov) 
 
-str(baci)
-
- 
-
-baci.aov <- aov(Abundance ~ Event + Site + Event:Site, data=baci); summary(baci.aov) 
-#what is Site?
-#error: variable lengths differ (found for 'Event')
-
-baci.aov2 <- aov(Abundance ~ Event + Error(factor(Time)) + Site + Event:Site, data=baci); summary(baci.aov2)
-#error: variable lengths differ (found for 'Event')
- 
-
- 
-
-par(mfrow=c(2,2))
-
-plot(baci.aov)
-
-plot(baci.aov2)
-
- 
-
-baci.aov <- aov(delta ~ Event, data=baci.df); summary(baci.aov)
+#boxplots
+boxplot(pm2.5 ~ controlvsimpact + beforevsafter, data=baci2)
 ```
 
+#redoing BACI with a new data set including all the pollutants' means.
+
+```{r}
+
+baci_allmeans.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/baci_allmeans.csv"
+baci_allmeans <- read.csv(baci_allmeans.csv)
+str(baci_allmeans)
+
+attach(baci_allmeans)
+
+baci_allmeans[Event=="before_lockdown",7]
+mean(baci_allmeans[Event=="before_lockdown",7], na.rm=TRUE) #for C_2019 137.9755
+
+baci_allmeans[Event=="after_lockdown",7]
+mean(baci_allmeans[Event=="after_lockdown",7], na.rm=TRUE) #for C_2019 124.0723
+
+baci_allmeans[Event=="before_lockdown",13]
+mean(baci_allmeans[Event=="before_lockdown",13], na.rm=TRUE) #for I_2020 137.097
+
+baci_allmeans[Event=="after_lockdown",13]
+mean(baci_allmeans[Event=="after_lockdown",13], na.rm=TRUE) #for I_2020 106.6104
+
+
+baci2_allmeans.csv = "/home/CAMPUS/dapa2019/R/China_air_pollution_COVID/means/baci2_allmeans.csv"
+baci2_allmeans <- read.csv(baci2_allmeans.csv)
+str(baci2_allmeans)
+baci2_allmeans$controlvsimpact = as.factor(baci2_allmeans$X2019vs2020)
+
+baci.aov <- aov(co ~ beforevsafter + controlvsimpact + beforevsafter:controlvsimpact, data=baci2_allmeans); summary(baci.aov) 
+
+
+```
+
+#pm2.5
+
+baci[Event=="before_lockdown",2]
+mean(baci[Event=="before_lockdown",2]) #for C_2019 137.9755
+
+baci[Event=="after_lockdown",2]
+mean(baci[Event=="after_lockdown",2]) #for C_2019 124.0723
+
+baci[Event=="before_lockdown",3]
+mean(baci[Event=="before_lockdown",3]) #for I_2020 137.097
+
+baci[Event=="after_lockdown",3]
+mean(baci[Event=="after_lockdown",3]) #for I_2020 106.6104
+
+means:
+beforelockdown 2019 137.9755
+afterlockdown 2019 124.0723
+beforelockdown 2020 137.097
+afterlockdown 2020 106.6104
+
+                               Df Sum Sq Mean Sq F value   Pr(>F)    
+beforevsafter                   1  14778   14778  31.039 1.66e-07 *** #seasonal effect
+controlvsimpact                 1   2523    2523   5.299   0.0231 *  #covid year
+beforevsafter:controlvsimpact   1   2063    2063   4.332   0.0396 *  #there is an interaction between the years and the before and after. both contribute to the diff in the means. the relationship is nonlinear. when you add control vs impact there is a non additive effect.
+Residuals                     116  55230     476                     
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+#moving on to other pollutants
+
+#pm10
+beforelockdown 2019 [1] 77.62988
+afterlockdown 2019 [1] 67.50539
+beforelockdown 2020 [1] 70.61246
+afterlockdown 2020 [1] 55.9869
+
+                               Df Sum Sq Mean Sq F value   Pr(>F)    
+beforevsafter                   1   4594    4594  14.125 0.000269 ***
+controlvsimpact                 1   2577    2577   7.922 0.005738 ** 
+beforevsafter:controlvsimpact   1    152     152   0.467 0.495664    
+Residuals                     116  37731     325                     
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#o3
+beforelockdown 2019 [1] 23.58492
+afterlockdown 2019 [1] 39.49967
+beforelockdown 2020 [1] 25.28063
+afterlockdown 2020 [1] 39.29786
+
+                              Df Sum Sq Mean Sq F value Pr(>F)    
+beforevsafter                  1   5685    5685 216.937 <2e-16 ***
+controlvsimpact                1     14      14   0.525  0.471    
+beforevsafter:controlvsimpact  1     22      22   0.846  0.360    
+Residuals                     96   2516      26                   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+20 observations deleted due to missingness
+
+#no2
+beforelockdown 2019 [1] 23.76107
+afterlockdown 2019 [1] 19.95249
+beforelockdown 2020 [1] 22.61039
+afterlockdown 2020 [1] 14.92706
+
+                               Df Sum Sq Mean Sq F value   Pr(>F)    
+beforevsafter                   1    990   990.5  36.047 2.26e-08 ***
+controlvsimpact                 1    286   286.1  10.412  0.00163 ** 
+beforevsafter:controlvsimpact   1    113   112.6   4.098  0.04523 *  
+Residuals                     116   3187    27.5                     
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#so2
+beforelockdown 2019 [1] 13.00346
+afterlockdown 2019 [1] 9.460548
+beforelockdown 2020 [1] 11.07439
+afterlockdown 2020 [1] 7.28235
+
+                               Df Sum Sq Mean Sq F value Pr(>F)  
+beforevsafter                   1    404   403.5   5.124 0.0255 *
+controlvsimpact                 1    127   126.5   1.607 0.2075  
+beforevsafter:controlvsimpact   1      0     0.5   0.006 0.9388  
+Residuals                     116   9134    78.7                 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#co
+beforelockdown 2019 [1] 12.11218
+afterlockdown 2019 [1] 9.254269
+beforelockdown 2020 [1] 11.72867
+afterlockdown 2020 [1] 7.674415
+
+Show in New WindowClear OutputExpand/Collapse Output
+'data.frame':	2328 obs. of  7 variables:
+ $ date: Factor w/ 2328 levels "2014/1/1","2014/1/10",..: 2317 2322 2323 2324 2325 2326 2327 2328 2307 2308 ...
+ $ pm25: int  189 149 143 109 150 160 160 107 100 72 ...
+ $ pm10: int  65 58 49 48 53 61 26 42 52 101 ...
+ $ o3  : int  101 38 21 33 92 36 40 26 35 42 ...
+ $ no2 : int  8 12 11 12 15 16 8 11 9 4 ...
+ $ so2 : int  1 2 2 NA 1 4 NA NA NA NA ...
+ $ co  : int  5 10 6 5 6 12 8 5 4 1 ...
+Show in New WindowClear OutputExpand/Collapse Output
+ 
+ 
+X
+<int>
+id
+<fctr>
+date
+<fctr>
+pm25
+<int>
+pm10
+<int>
+o3
+<int>
+no2
+<int>
+so2
+<int>
+co
+<int>
+1	1	tianjin	2020/7/2	94	53	NA	8	3	9	
+2	2	tianjin	2020/7/3	141	NA	NA	NA	NA	NA	
+3	3	tianjin	2020/6/2	84	78	NA	13	1	6	
+4	4	tianjin	2020/6/3	102	180	NA	16	2	7	
+5	5	tianjin	2020/6/4	145	101	NA	18	5	13	
+6	6	tianjin	2020/6/5	97	38	NA	14	6	7	
+6 rows | 1-10 of 10 columns
+Show in New WindowClear OutputExpand/Collapse Output
+
+Show in New WindowClear OutputExpand/Collapse Output
+ 
+ 
+X
+<int>
+id
+<fctr>
+date
+<fctr>
+pm25
+<int>
+pm10
+<int>
+o3
+<int>
+no2
+<int>
+so2
+<int>
+co
+<int>
+17008	12301	chifeng	2019/1/2	95	64	18	25	29	13	
+17009	12302	chifeng	2019/1/3	121	84	21	21	26	12	
+17010	12303	chifeng	2019/1/4	149	29	27	11	8	5	
+17011	12304	chifeng	2019/1/5	52	40	22	18	20	8	
+17012	12305	chifeng	2019/1/6	77	87	6	26	45	18	
+17013	12306	chifeng	2019/1/7	151	58	23	17	16	11	
+6 rows | 1-10 of 10 columns
+Show in New WindowClear OutputExpand/Collapse Output
+Error: unexpected symbol in:
+"
+all_2019"
+Show in New WindowClear OutputExpand/Collapse Output
+	
+`geom_smooth()` using formula 'y ~ x'
+	
+Removed 30 rows containing non-finite values (stat_smooth).
+Removed 30 rows containing missing values (geom_point).
+
+Show in New WindowClear OutputExpand/Collapse Output
+
+Show in New WindowClear OutputExpand/Collapse Output
+'data.frame':	120 obs. of  8 variables:
+ $ city     : Factor w/ 30 levels "baotou","beijing",..: 1 2 3 4 5 6 7 8 9 10 ...
+ $ pm25     : num  150 113 148 161 137 ...
+ $ pm10     : num  107.6 72.4 92.8 101.5 69.4 ...
+ $ o3       : num  24.6 17.5 24.1 22.1 19.1 ...
+ $ no2      : num  25.8 23 22.9 26.1 27.3 ...
+ $ so2      : num  27.48 4.69 23.32 16.31 5.27 ...
+ $ co       : num  21.63 9.18 21.04 12.46 9 ...
+ $ timeframe: Factor w/ 4 levels "2019_after","2019_before",..: 2 2 2 2 2 2 2 2 2 2 ...
+Show in New WindowClear OutputExpand/Collapse Output
+
+Call:
+lm(formula = pm25 ~ timeframe + population, data = regression)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-50.440 -10.142   1.848  10.683  85.181 
+
+Coefficients:
+                       Estimate Std. Error t value Pr(>|t|)    
+(Intercept)           1.275e+02  4.177e+00  30.532  < 2e-16 ***
+timeframe2019_before  1.390e+01  5.528e+00   2.515  0.01328 *  
+timeframe2020_after  -1.746e+01  5.528e+00  -3.159  0.00202 ** 
+timeframe2020_before  1.302e+01  5.528e+00   2.356  0.02015 *  
+population           -7.313e-07  3.116e-07  -2.347  0.02064 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 21.41 on 115 degrees of freedom
+Multiple R-squared:  0.2934,	Adjusted R-squared:  0.2689 
+F-statistic: 11.94 on 4 and 115 DF,  p-value: 3.789e-08
+
+Show in New WindowClear OutputExpand/Collapse Output
+
+Call:
+lm(formula = pm25_all2020 ~ population_30cities + industry, data = hierarchical_reg_grp)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-54.611 -15.740  -2.356  13.122  98.320 
+
+Coefficients:
+                      Estimate Std. Error t value Pr(>|t|)    
+(Intercept)          1.286e+02  6.410e+00  20.064   <2e-16 ***
+population_30cities -8.536e-07  5.553e-07  -1.537    0.130    
+industry            -1.825e-04  3.145e-04  -0.580    0.564    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 26.98 on 57 degrees of freedom
+Multiple R-squared:  0.04522,	Adjusted R-squared:  0.01172 
+F-statistic:  1.35 on 2 and 57 DF,  p-value: 0.2675
+
+                               Df Sum Sq Mean Sq F value   Pr(>F)    
+beforevsafter                   1  358.3   358.3  23.329 4.21e-06 ***
+controlvsimpact                 1   28.9    28.9   1.882    0.173    
+beforevsafter:controlvsimpact   1   10.7    10.7   0.699    0.405    
+Residuals                     116 1781.8    15.4                     
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
